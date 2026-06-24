@@ -1,0 +1,141 @@
+import { X, MapPin, Package, CreditCard, Calendar } from 'lucide-react'
+import type { AdminOrder } from '../types'
+import gaawLogo from '../assets/gaaw-logo.png'
+
+const STATUS_LABELS: Record<string, string> = {
+  DELIVERED: 'Livré',
+  CANCELLED: 'Annulé',
+  IN_DELIVERY: 'En cours',
+  ACCEPTED: 'Accepté',
+  ARRIVED_PICKUP: 'Sur place',
+  SEARCHING: 'Recherche',
+  AWAITING_PAYMENT: 'Attente paiement',
+  BLOCKED: 'Bloqué',
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  DELIVERED:        'bg-green-100 text-green-600',
+  CANCELLED:        'bg-red-100 text-red-500',
+  IN_DELIVERY:      'bg-blue-100 text-blue-500',
+  ACCEPTED:         'bg-blue-100 text-blue-500',
+  ARRIVED_PICKUP:   'bg-blue-100 text-blue-500',
+  SEARCHING:        'bg-yellow-100 text-yellow-600',
+  AWAITING_PAYMENT: 'bg-gray-100 text-gray-500',
+  BLOCKED:          'bg-red-100 text-red-500',
+}
+
+interface Props {
+  order: AdminOrder
+  onClose: () => void
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
+      <span className="text-sm text-gray-400">{label}</span>
+      <span className="text-sm font-semibold text-[#0D1B2A]">{value}</span>
+    </div>
+  )
+}
+
+export default function CourseDetailModal({ order, onClose }: Props) {
+  const date = new Date(order.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+
+  return (
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#0D1B2A] flex items-center justify-center">
+              <Package size={18} className="text-[#CCFF00]" />
+            </div>
+            <div>
+              <h2 className="font-bold text-[#0D1B2A] text-lg">Course ORD-{order.id}</h2>
+              <div className="flex items-center gap-2 mt-0.5">
+                <Calendar size={12} className="text-gray-400" />
+                <span className="text-xs text-gray-400">{date}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className={`text-xs font-bold px-3 py-1 rounded-full ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-500'}`}>
+              {STATUS_LABELS[order.status] ?? order.status}
+            </span>
+            <button onClick={onClose} className="text-gray-400 hover:text-[#0D1B2A] transition">
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-5">
+          <div>
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Itinéraire</h3>
+            <div className="relative pl-6">
+              <div className="absolute left-2 top-2 bottom-2 w-px bg-gray-200" />
+              <div className="flex items-start gap-3 mb-4">
+                <div className="absolute left-0 w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow" />
+                <div>
+                  <p className="text-xs text-gray-400 mb-0.5">Départ</p>
+                  <p className="text-sm font-semibold text-[#0D1B2A]">{order.pickupAddress}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="absolute left-0 bottom-0 w-4 h-4 rounded-full bg-orange-400 border-2 border-white shadow" />
+                <div>
+                  <p className="text-xs text-gray-400 mb-0.5">Destination</p>
+                  <p className="text-sm font-semibold text-[#0D1B2A]">{order.deliveryAddress}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-gray-50 rounded-xl p-4">
+              <p className="text-xs text-gray-400 font-semibold mb-2">Client</p>
+              <p className="font-bold text-[#0D1B2A] text-sm">{order.client.firstName} {order.client.lastName}</p>
+              <p className="text-xs text-gray-400">{order.client.phone}</p>
+            </div>
+            <div className="bg-gray-50 rounded-xl p-4">
+              <p className="text-xs text-gray-400 font-semibold mb-2">Livreur</p>
+              {order.driver ? (
+                <>
+                  <p className="font-bold text-[#0D1B2A] text-sm">{order.driver.firstName} {order.driver.lastName}</p>
+                  <p className="text-xs text-gray-400">{order.driver.phone}</p>
+                  {order.driver.vehicleType && <p className="text-xs text-gray-400">{order.driver.vehicleType}</p>}
+                </>
+              ) : (
+                <p className="text-sm text-gray-400 italic">Non assigné</p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <CreditCard size={13} /> Tarification
+            </h3>
+            <div className="bg-gray-50 rounded-xl px-4 pt-2 pb-1">
+              <Row label="Distance" value={`${order.distanceKm.toFixed(1)} km`} />
+              <Row label="Mode de paiement" value={order.paymentMethod} />
+              <Row label="Taille colis" value={order.packageSize} />
+              <Row label="À collecter" value={`${order.amountToCollect.toFixed(2)}€`} />
+              <div className="flex items-center justify-between py-3 mt-1 border-t border-gray-200">
+                <span className="font-bold text-[#0D1B2A]">Total course</span>
+                <span className="font-bold text-xl text-[#0D1B2A]">{order.price.toFixed(2)}€</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Preuve de livraison</h3>
+            <div className="rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center py-8 gap-2">
+              <img src={gaawLogo} alt="GAAW" className="w-12 h-12 opacity-20" />
+              <p className="text-sm text-gray-300">
+                {order.status === 'DELIVERED' ? 'Photo prise par le livreur' : 'Non disponible'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
