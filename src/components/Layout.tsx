@@ -1,6 +1,9 @@
+import { useState, useRef, useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { Search, Bell } from 'lucide-react'
+import { Search, Bell, Settings, LogOut } from 'lucide-react'
 import Sidebar from './Sidebar'
+import AdminProfileModal from './AdminProfileModal'
+import { useAuth } from '../context/AuthContext'
 
 const pageTitles: Record<string, string> = {
   '/': 'Tableau de bord',
@@ -12,8 +15,23 @@ const pageTitles: Record<string, string> = {
 
 export default function Layout() {
   const token = localStorage.getItem('token')
+  const { user, logout } = useAuth()
   const location = useLocation()
   const title = pageTitles[location.pathname] ?? 'Admin'
+
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    if (menuOpen) document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [menuOpen])
 
   if (!token) return <Navigate to="/login" replace />
 
@@ -39,14 +57,46 @@ export default function Layout() {
               <Bell size={20} className="text-gray-400" />
               <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
             </div>
-            <div className="flex items-center gap-2.5">
-              <div className="text-right">
-                <p className="text-sm font-semibold text-[#0D1B2A] leading-tight">Admin</p>
-                <p className="text-xs text-gray-400">Super Admin</p>
-              </div>
-              <div className="w-9 h-9 rounded-full bg-[#0D1B2A] flex items-center justify-center shrink-0">
-                <span className="text-white text-sm font-bold">A</span>
-              </div>
+
+            {/* Avatar + dropdown */}
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen(v => !v)}
+                className="flex items-center gap-2.5 cursor-pointer"
+              >
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-[#0D1B2A] leading-tight">{user ? `${user.firstName} ${user.lastName}` : 'Admin'}</p>
+                  <p className="text-xs text-gray-400">{user?.role ?? 'Super Admin'}</p>
+                </div>
+                <div className="w-9 h-9 rounded-full bg-[#0D1B2A] flex items-center justify-center shrink-0 hover:opacity-80 transition">
+                  <span className="text-[#CCFF00] text-sm font-bold">{user?.firstName?.[0] ?? 'A'}</span>
+                </div>
+              </button>
+
+              {menuOpen && (
+                <div className="absolute right-0 top-12 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                  <div className="px-4 py-2 border-b border-gray-50 mb-1">
+                    <p className="text-xs font-semibold text-[#0D1B2A] truncate">{user?.firstName} {user?.lastName}</p>
+                    <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+                  </div>
+                  <button
+                    onClick={() => { setMenuOpen(false); setProfileOpen(true) }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#0D1B2A] hover:bg-gray-50 transition cursor-pointer"
+                  >
+                    <Settings size={15} className="text-gray-400" />
+                    Paramètres du compte
+                  </button>
+                  <div className="border-t border-gray-50 mt-1 pt-1">
+                    <button
+                      onClick={() => { setMenuOpen(false); logout() }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition cursor-pointer"
+                    >
+                      <LogOut size={15} />
+                      Se déconnecter
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </header>
@@ -56,6 +106,8 @@ export default function Layout() {
           <Outlet />
         </main>
       </div>
+
+      {profileOpen && <AdminProfileModal onClose={() => setProfileOpen(false)} />}
     </div>
   )
 }

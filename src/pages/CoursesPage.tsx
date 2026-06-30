@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Eye } from 'lucide-react'
+import { Eye, Search } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
 import type { AdminOrder } from '../types'
@@ -18,18 +18,39 @@ const STATUS_STYLES: Record<string, string> = {
 
 export default function CoursesPage() {
   const [selected, setSelected] = useState<AdminOrder | null>(null)
+  const [search, setSearch] = useState('')
+
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ['orders'],
     queryFn: () => adminApi.getOrders().then(r => r.data),
   })
 
+  const q = search.toLowerCase()
+  const filtered = orders.filter(o =>
+    String(o.id).includes(q) ||
+    `${o.client.firstName ?? ''} ${o.client.lastName ?? ''}`.toLowerCase().includes(q) ||
+    (o.pickupAddress ?? '').toLowerCase().includes(q) ||
+    (o.deliveryAddress ?? '').toLowerCase().includes(q) ||
+    (o.status ?? '').toLowerCase().includes(q)
+  )
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-[#0D1B2A]">Suivi des Courses</h2>
-        <span className="text-sm font-medium text-[#0D1B2A] border border-gray-200 rounded-lg px-4 py-2 bg-white shadow-sm">
-          Total: {orders.length}
-        </span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-2 shadow-sm w-64">
+            <Search size={15} className="text-gray-400 shrink-0" />
+            <input
+              type="text" placeholder="ID, client, adresse, statut…" value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="outline-none text-sm text-gray-600 w-full bg-transparent"
+            />
+          </div>
+          <span className="text-sm font-medium text-[#0D1B2A] border border-gray-200 rounded-lg px-4 py-2 bg-white shadow-sm">
+            Total: {orders.length}
+          </span>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
@@ -47,10 +68,10 @@ export default function CoursesPage() {
           <tbody>
             {isLoading ? (
               <tr><td colSpan={6} className="text-center py-12 text-gray-400 text-sm">Chargement...</td></tr>
-            ) : orders.length === 0 ? (
-              <tr><td colSpan={6} className="text-center py-12 text-gray-400 text-sm">Aucune commande.</td></tr>
-            ) : orders.map((order, i) => (
-              <tr key={order.id} className={i !== orders.length - 1 ? 'border-b border-gray-50' : ''}>
+            ) : filtered.length === 0 ? (
+              <tr><td colSpan={6} className="text-center py-12 text-gray-400 text-sm">{search ? 'Aucun résultat.' : 'Aucune commande.'}</td></tr>
+            ) : filtered.map((order, i) => (
+              <tr key={order.id} className={i !== filtered.length - 1 ? 'border-b border-gray-50' : ''}>
                 <td className="px-6 py-4">
                   <p className="font-semibold text-[#0D1B2A] text-sm">ORD-{order.id}</p>
                   <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
@@ -76,7 +97,7 @@ export default function CoursesPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <button onClick={() => setSelected(order)} className="text-gray-400 hover:text-[#0D1B2A] transition">
+                  <button onClick={() => setSelected(order)} className="text-gray-400 hover:text-[#0D1B2A] transition cursor-pointer">
                     <Eye size={18} />
                   </button>
                 </td>

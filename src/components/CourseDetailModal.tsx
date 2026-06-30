@@ -39,7 +39,7 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 export default function CourseDetailModal({ order, onClose }: Props) {
-  const date = new Date(order.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  const date = order.createdAt ? new Date(order.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
@@ -92,8 +92,8 @@ export default function CourseDetailModal({ order, onClose }: Props) {
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-gray-50 rounded-xl p-4">
               <p className="text-xs text-gray-400 font-semibold mb-2">Client</p>
-              <p className="font-bold text-[#0D1B2A] text-sm">{order.client.firstName} {order.client.lastName}</p>
-              <p className="text-xs text-gray-400">{order.client.phone}</p>
+              <p className="font-bold text-[#0D1B2A] text-sm">{order.client.firstName ?? ''} {order.client.lastName ?? ''}</p>
+              <p className="text-xs text-gray-400">{order.client.phone ?? '—'}</p>
             </div>
             <div className="bg-gray-50 rounded-xl p-4">
               <p className="text-xs text-gray-400 font-semibold mb-2">Livreur</p>
@@ -114,13 +114,13 @@ export default function CourseDetailModal({ order, onClose }: Props) {
               <CreditCard size={13} /> Tarification
             </h3>
             <div className="bg-gray-50 rounded-xl px-4 pt-2 pb-1">
-              <Row label="Distance" value={`${order.distanceKm.toFixed(1)} km`} />
-              <Row label="Mode de paiement" value={order.paymentMethod} />
-              <Row label="Taille colis" value={order.packageSize} />
-              <Row label="À collecter" value={`${order.amountToCollect.toFixed(2)}€`} />
+              <Row label="Distance" value={order.distanceKm != null ? `${order.distanceKm.toFixed(1)} km` : '—'} />
+              <Row label="Mode de paiement" value={order.paymentMethod ?? '—'} />
+              <Row label="Taille colis" value={order.packageSize ?? '—'} />
+              <Row label="À collecter" value={order.amountToCollect != null ? `${order.amountToCollect.toFixed(2)}€` : '—'} />
               <div className="flex items-center justify-between py-3 mt-1 border-t border-gray-200">
                 <span className="font-bold text-[#0D1B2A]">Total course</span>
-                <span className="font-bold text-xl text-[#0D1B2A]">{order.price.toFixed(2)}€</span>
+                <span className="font-bold text-xl text-[#0D1B2A]">{order.price != null ? order.price.toFixed(2) : '0.00'}€</span>
               </div>
             </div>
           </div>

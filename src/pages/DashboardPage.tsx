@@ -56,7 +56,7 @@ export default function DashboardPage() {
               {recentOrders.map((order) => (
                 <div key={order.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition">
                   <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm shrink-0">
-                    {order.client.firstName[0]}
+                    {order.client.firstName?.[0] ?? '?'}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-[#0D1B2A] text-sm">Course #ORD-{order.id}</p>
@@ -84,7 +84,7 @@ export default function DashboardPage() {
               {pendingDrivers.map((d) => (
                 <div key={d.id} className="flex items-center gap-3 bg-orange-50 rounded-xl p-3">
                   <div className="w-9 h-9 rounded-full bg-orange-400 flex items-center justify-center text-white font-bold text-sm shrink-0">
-                    {d.firstName[0]}{d.lastName[0]}
+                    {d.firstName?.[0] ?? '?'}{d.lastName?.[0] ?? ''}
                   </div>
                   <div className="flex-1">
                     <p className="font-bold text-[#0D1B2A] text-sm">{d.firstName} {d.lastName}</p>

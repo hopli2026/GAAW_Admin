@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Eye, Ban, Check, X } from 'lucide-react'
+import { Eye, Ban, Check, X, Search } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
 import type { AdminDriver } from '../types'
@@ -7,7 +7,7 @@ import DriverDetailModal from '../components/DriverDetailModal'
 
 const AVATAR_COLORS = ['bg-green-500', 'bg-orange-400', 'bg-yellow-400', 'bg-blue-400', 'bg-purple-400', 'bg-pink-400']
 
-function getInitials(d: AdminDriver) { return `${d.firstName[0] ?? ''}${d.lastName[0] ?? ''}`.toUpperCase() }
+function getInitials(d: AdminDriver) { return `${d.firstName?.[0] ?? ''}${d.lastName?.[0] ?? ''}`.toUpperCase() }
 function getColor(d: AdminDriver) { return AVATAR_COLORS[d.id % AVATAR_COLORS.length] }
 
 function StatusBadge({ status }: { status: string }) {
@@ -19,6 +19,7 @@ function StatusBadge({ status }: { status: string }) {
 export default function LivreursPage() {
   const queryClient = useQueryClient()
   const [selected, setSelected] = useState<AdminDriver | null>(null)
+  const [search, setSearch] = useState('')
 
   const { data: drivers = [], isLoading } = useQuery({
     queryKey: ['drivers'],
@@ -37,13 +38,31 @@ export default function LivreursPage() {
   const active  = drivers.filter(d => d.driverStatus === 'ACTIVE').length
   const pending = drivers.filter(d => d.driverStatus !== 'ACTIVE' && d.driverStatus !== 'SUSPENDED').length
 
+  const q = search.toLowerCase()
+  const filtered = drivers.filter(d =>
+    `${d.firstName ?? ''} ${d.lastName ?? ''}`.toLowerCase().includes(q) ||
+    (d.email ?? '').toLowerCase().includes(q) ||
+    (d.phone ?? '').includes(q) ||
+    (d.vehicleType ?? '').toLowerCase().includes(q)
+  )
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-[#0D1B2A]">Gestion des Livreurs</h2>
-        <span className="text-sm font-medium text-[#0D1B2A] border border-gray-200 rounded-lg px-4 py-2 bg-white shadow-sm">
-          Total: {drivers.length} | En attente: {pending} | Actifs: {active}
-        </span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-2 shadow-sm w-64">
+            <Search size={15} className="text-gray-400 shrink-0" />
+            <input
+              type="text" placeholder="Nom, email, téléphone…" value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="outline-none text-sm text-gray-600 w-full bg-transparent"
+            />
+          </div>
+          <span className="text-sm font-medium text-[#0D1B2A] border border-gray-200 rounded-lg px-4 py-2 bg-white shadow-sm whitespace-nowrap">
+            Total: {drivers.length} | En attente: {pending} | Actifs: {active}
+          </span>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
@@ -58,10 +77,10 @@ export default function LivreursPage() {
           <tbody>
             {isLoading ? (
               <tr><td colSpan={6} className="text-center py-12 text-gray-400 text-sm">Chargement...</td></tr>
-            ) : drivers.length === 0 ? (
-              <tr><td colSpan={6} className="text-center py-12 text-gray-400 text-sm">Aucun livreur.</td></tr>
-            ) : drivers.map((d, i) => (
-              <tr key={d.id} className={i !== drivers.length - 1 ? 'border-b border-gray-50' : ''}>
+            ) : filtered.length === 0 ? (
+              <tr><td colSpan={6} className="text-center py-12 text-gray-400 text-sm">{search ? 'Aucun résultat.' : 'Aucun livreur.'}</td></tr>
+            ) : filtered.map((d, i) => (
+              <tr key={d.id} className={i !== filtered.length - 1 ? 'border-b border-gray-50' : ''}>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-full ${getColor(d)} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
@@ -93,7 +112,7 @@ export default function LivreursPage() {
                     {d.driverStatus === 'ACTIVE' ? (
                       <button
                         onClick={() => suspendMutation.mutate(d.id)}
-                        className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center text-red-400 hover:bg-red-50 transition"
+                        className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center text-red-400 hover:bg-red-50 transition cursor-pointer"
                       >
                         <Ban size={14} />
                       </button>
@@ -101,19 +120,21 @@ export default function LivreursPage() {
                       <>
                         <button
                           onClick={() => validateMutation.mutate(d.id)}
-                          className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600 hover:bg-green-200 transition"
+                          className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600 hover:bg-green-200 transition cursor-pointer"
                         >
                           <Check size={14} />
                         </button>
-                        <button
-                          onClick={() => suspendMutation.mutate(d.id)}
-                          className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center text-red-500 hover:bg-red-200 transition"
-                        >
-                          <X size={14} />
-                        </button>
+                        {d.driverStatus !== 'SUSPENDED' && (
+                          <button
+                            onClick={() => suspendMutation.mutate(d.id)}
+                            className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center text-red-500 hover:bg-red-200 transition cursor-pointer"
+                          >
+                            <X size={14} />
+                          </button>
+                        )}
                       </>
                     )}
-                    <button onClick={() => setSelected(d)} className="text-gray-400 hover:text-[#0D1B2A] transition ml-1">
+                    <button onClick={() => setSelected(d)} className="text-gray-400 hover:text-[#0D1B2A] transition ml-1 cursor-pointer">
                       <Eye size={18} />
                     </button>
                   </div>
@@ -124,7 +145,13 @@ export default function LivreursPage() {
         </table>
       </div>
 
-      {selected && <DriverDetailModal driver={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <DriverDetailModal
+          driver={selected}
+          onClose={() => setSelected(null)}
+          onUpdated={(updated) => setSelected(updated)}
+        />
+      )}
     </div>
   )
 }

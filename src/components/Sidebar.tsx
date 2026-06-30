@@ -19,7 +19,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-56 min-h-screen bg-white border-r border-gray-100 flex flex-col shrink-0">
+    <aside className="w-56 h-screen sticky top-0 bg-white border-r border-gray-100 flex flex-col shrink-0 overflow-y-auto">
       {/* Logo */}
       <div className="px-5 py-4 flex items-center gap-2.5 border-b border-gray-50">
         <img src={gaawLogo} alt="GAAW" className="w-10 h-10 rounded-xl object-cover shrink-0" />

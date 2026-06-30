@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Eye, Lock, Search } from 'lucide-react'
+import { Eye, Lock, LockOpen, Search } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
 import type { AdminClient } from '../types'
@@ -19,10 +19,14 @@ export default function ClientsPage() {
     mutationFn: (id: number) => adminApi.blockClient(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['clients'] }),
   })
+  const unblockMutation = useMutation({
+    mutationFn: (id: number) => adminApi.unblockClient(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['clients'] }),
+  })
 
   const filtered = clients.filter(c =>
-    `${c.firstName} ${c.lastName}`.toLowerCase().includes(search.toLowerCase()) ||
-    c.email.toLowerCase().includes(search.toLowerCase())
+    `${c.firstName ?? ''} ${c.lastName ?? ''}`.toLowerCase().includes(search.toLowerCase()) ||
+    (c.email ?? '').toLowerCase().includes(search.toLowerCase())
   )
 
   return (
@@ -58,10 +62,10 @@ export default function ClientsPage() {
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-[#0D1B2A] font-bold text-sm shrink-0">
-                      {c.firstName[0]}
+                      {c.firstName?.[0] ?? '?'}
                     </div>
                     <div>
-                      <p className="font-semibold text-[#0D1B2A] text-sm">{c.firstName} {c.lastName}</p>
+                      <p className="font-semibold text-[#0D1B2A] text-sm">{c.firstName ?? '—'} {c.lastName ?? ''}</p>
                       <p className="text-xs text-gray-400">ID: CLIENT-{c.id}</p>
                     </div>
                   </div>
@@ -81,13 +85,24 @@ export default function ClientsPage() {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => blockMutation.mutate(c.id)}
-                      className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center text-red-400 hover:bg-red-50 transition"
-                    >
-                      <Lock size={14} />
-                    </button>
-                    <button onClick={() => setSelected(c)} className="text-gray-400 hover:text-[#0D1B2A] transition">
+                    {c.blocked ? (
+                      <button
+                        onClick={() => unblockMutation.mutate(c.id)}
+                        className="w-8 h-8 rounded-lg border border-green-200 flex items-center justify-center text-green-500 hover:bg-green-50 transition cursor-pointer"
+                        title="Débloquer"
+                      >
+                        <LockOpen size={14} />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => blockMutation.mutate(c.id)}
+                        className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center text-red-400 hover:bg-red-50 transition cursor-pointer"
+                        title="Bloquer"
+                      >
+                        <Lock size={14} />
+                      </button>
+                    )}
+                    <button onClick={() => setSelected(c)} className="text-gray-400 hover:text-[#0D1B2A] transition cursor-pointer">
                       <Eye size={18} />
                     </button>
                   </div>
@@ -98,7 +113,13 @@ export default function ClientsPage() {
         </table>
       </div>
 
-      {selected && <ClientDetailModal client={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <ClientDetailModal
+          client={selected}
+          onClose={() => setSelected(null)}
+          onUpdated={(updated) => setSelected(updated)}
+        />
+      )}
     </div>
   )
 }
