@@ -1,8 +1,73 @@
 import { useState } from 'react'
-import { X, Truck, CheckCircle, XCircle, Euro, Pencil, Save, KeyRound, Eye, EyeOff } from 'lucide-react'
+import { X, Truck, CheckCircle, XCircle, Euro, Pencil, Save, KeyRound, Eye, EyeOff, FileText, ExternalLink } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
-import type { AdminDriver, AdminOrder } from '../types'
+import type { AdminDriver, AdminOrder, DriverDocument } from '../types'
+
+const VEHICLE_LABELS: Record<string, string> = {
+  BICYCLE: 'Vélo',
+  SCOOTER: 'Scooter',
+  CAR: 'Voiture',
+}
+
+const DOC_LABELS: Record<string, string> = {
+  ID_CARD_FRONT:        "Carte d'identité (Recto)",
+  ID_CARD_BACK:         "Carte d'identité (Verso)",
+  DRIVER_LICENSE_FRONT: 'Permis de conduire (Recto)',
+  DRIVER_LICENSE_BACK:  'Permis de conduire (Verso)',
+  VEHICLE_REGISTRATION: 'Carte grise',
+  VEHICLE_INSURANCE:    'Assurance véhicule',
+}
+
+const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif']
+
+function isImage(url: string) {
+  const ext = url.split('?')[0].split('.').pop()?.toLowerCase()
+  return IMAGE_EXTENSIONS.includes(ext ?? '')
+}
+
+function DocumentCard({ doc }: { doc: DriverDocument }) {
+  const [expanded, setExpanded] = useState(false)
+  const label = DOC_LABELS[doc.type] ?? doc.type
+  const image = isImage(doc.fileUrl)
+
+  return (
+    <div className="border border-gray-100 rounded-xl overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 bg-gray-50">
+        <div className="flex items-center gap-2">
+          <FileText size={14} className="text-gray-400" />
+          <span className="text-sm font-semibold text-[#0D1B2A]">{label}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <a
+            href={doc.fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-[#0D1B2A] transition"
+            title="Ouvrir dans un nouvel onglet"
+          >
+            <ExternalLink size={14} />
+          </a>
+          {image && (
+            <button
+              onClick={() => setExpanded(v => !v)}
+              className="text-xs font-semibold text-[#0D1B2A] hover:underline cursor-pointer"
+            >
+              {expanded ? 'Masquer' : 'Voir'}
+            </button>
+          )}
+        </div>
+      </div>
+      {expanded && image && (
+        <img
+          src={doc.fileUrl}
+          alt={label}
+          className="w-full object-contain max-h-64 bg-black/5"
+        />
+      )}
+    </div>
+  )
+}
 
 const STATUS_STYLES: Record<string, string> = {
   DELIVERED:    'bg-green-100 text-green-600',
@@ -53,6 +118,11 @@ export default function DriverDetailModal({ driver, onClose, onUpdated }: Props)
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ['driver-orders', driver.id],
     queryFn: () => adminApi.getDriverOrders(driver.id).then(r => r.data),
+  })
+
+  const { data: documents = [], isLoading: docsLoading } = useQuery({
+    queryKey: ['driver-documents', driver.id],
+    queryFn: () => adminApi.getDriverDocuments(driver.id).then(r => r.data),
   })
 
   const updateMutation = useMutation({
@@ -187,7 +257,7 @@ export default function DriverDetailModal({ driver, onClose, onUpdated }: Props)
                 <label className="text-xs text-gray-400 mb-1 block">Véhicule</label>
                 <div className="flex items-center gap-1.5">
                   <Truck size={14} className="text-gray-400" />
-                  <p className="text-sm font-semibold text-[#0D1B2A]">{driver.vehicleType ?? '—'}</p>
+                  <p className="text-sm font-semibold text-[#0D1B2A]">{(driver.vehicleType && VEHICLE_LABELS[driver.vehicleType]) ?? driver.vehicleType ?? '—'}</p>
                 </div>
               </div>
             )}
@@ -283,14 +353,17 @@ export default function DriverDetailModal({ driver, onClose, onUpdated }: Props)
           {/* Documents */}
           <div>
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Documents</h3>
-            <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-              {["Pièce d'identité", 'KBIS / Extrait Siret', 'RIB Bancaire'].map(label => (
-                <div key={label} className="flex items-center justify-between py-1.5">
-                  <span className="text-sm text-[#0D1B2A]">{label}</span>
-                  <span className="text-xs font-bold bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full">À vérifier</span>
-                </div>
-              ))}
-            </div>
+            {docsLoading ? (
+              <p className="text-sm text-gray-400 text-center py-4">Chargement...</p>
+            ) : documents.length === 0 ? (
+              <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-400 text-center">Aucun document soumis.</div>
+            ) : (
+              <div className="space-y-3">
+                {documents.map((doc: DriverDocument) => (
+                  <DocumentCard key={doc.type} doc={doc} />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Historique */}

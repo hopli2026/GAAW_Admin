@@ -1,4 +1,10 @@
 import { X, MapPin, Package, CreditCard, Calendar } from 'lucide-react'
+
+const VEHICLE_LABELS: Record<string, string> = {
+  BICYCLE: 'Vélo',
+  SCOOTER: 'Scooter',
+  CAR: 'Voiture',
+}
 import type { AdminOrder } from '../types'
 import gaawLogo from '../assets/gaaw-logo.png'
 
@@ -101,7 +107,7 @@ export default function CourseDetailModal({ order, onClose }: Props) {
                 <>
                   <p className="font-bold text-[#0D1B2A] text-sm">{order.driver.firstName} {order.driver.lastName}</p>
                   <p className="text-xs text-gray-400">{order.driver.phone}</p>
-                  {order.driver.vehicleType && <p className="text-xs text-gray-400">{order.driver.vehicleType}</p>}
+                  {order.driver.vehicleType && <p className="text-xs text-gray-400">{VEHICLE_LABELS[order.driver.vehicleType] ?? order.driver.vehicleType}</p>}
                 </>
               ) : (
                 <p className="text-sm text-gray-400 italic">Non assigné</p>
@@ -126,13 +132,31 @@ export default function CourseDetailModal({ order, onClose }: Props) {
           </div>
 
           <div>
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Preuve de livraison</h3>
-            <div className="rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center py-8 gap-2">
-              <img src={gaawLogo} alt="GAAW" className="w-12 h-12 opacity-20" />
-              <p className="text-sm text-gray-300">
-                {order.status === 'DELIVERED' ? 'Photo prise par le livreur' : 'Non disponible'}
-              </p>
-            </div>
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Photo de colis (retrait)</h3>
+            {order.pickupPhotoUrl ? (
+              <div className="rounded-xl overflow-hidden border border-gray-100">
+                <img
+                  src={order.pickupPhotoUrl}
+                  alt="Photo du colis"
+                  className="w-full object-contain max-h-72 bg-black/5"
+                />
+                <div className="flex items-center justify-end px-3 py-2 bg-gray-50">
+                  <a
+                    href={order.pickupPhotoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-semibold text-[#0D1B2A] hover:underline flex items-center gap-1"
+                  >
+                    <MapPin size={11} /> Ouvrir en grand
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center py-8 gap-2">
+                <img src={gaawLogo} alt="GAAW" className="w-12 h-12 opacity-20" />
+                <p className="text-sm text-gray-300">Aucune photo disponible</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

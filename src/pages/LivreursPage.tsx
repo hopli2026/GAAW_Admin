@@ -7,6 +7,12 @@ import DriverDetailModal from '../components/DriverDetailModal'
 
 const AVATAR_COLORS = ['bg-green-500', 'bg-orange-400', 'bg-yellow-400', 'bg-blue-400', 'bg-purple-400', 'bg-pink-400']
 
+const VEHICLE_LABELS: Record<string, string> = {
+  BICYCLE: 'Vélo',
+  SCOOTER: 'Scooter',
+  CAR: 'Voiture',
+}
+
 function getInitials(d: AdminDriver) { return `${d.firstName?.[0] ?? ''}${d.lastName?.[0] ?? ''}`.toUpperCase() }
 function getColor(d: AdminDriver) { return AVATAR_COLORS[d.id % AVATAR_COLORS.length] }
 
@@ -98,7 +104,7 @@ export default function LivreursPage() {
                 </td>
                 <td className="px-6 py-4">
                   <span className="text-sm border border-gray-200 rounded-lg px-3 py-1 text-gray-600 w-fit">
-                    {d.vehicleType ?? '—'}
+                    {(d.vehicleType && VEHICLE_LABELS[d.vehicleType]) ?? d.vehicleType ?? '—'}
                   </span>
                 </td>
                 <td className="px-6 py-4">
