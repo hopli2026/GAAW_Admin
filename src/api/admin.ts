@@ -1,5 +1,5 @@
 import api from './axios'
-import type { AdminOrder, AdminDriver, AdminClient, DashboardStats, PricingConfig } from '../types'
+import type { AdminOrder, AdminDriver, AdminClient, DashboardStats, PricingConfig, DriverDocument } from '../types'
 
 export const adminApi = {
   login: (email: string, password: string) =>
@@ -18,6 +18,7 @@ export const adminApi = {
   getOrders: () => api.get<AdminOrder[]>('/admin/orders'),
   getOrder: (id: number) => api.get<AdminOrder>(`/admin/orders/${id}`),
   getDriverOrders: (driverId: number) => api.get<AdminOrder[]>(`/admin/drivers/${driverId}/orders`),
+  getDriverDocuments: (driverId: number) => api.get<DriverDocument[]>(`/admin/drivers/${driverId}/documents`),
   getClientOrders: (clientId: number) => api.get<AdminOrder[]>(`/admin/clients/${clientId}/orders`),
 
   getDrivers: () => api.get<AdminDriver[]>('/admin/drivers'),
@@ -37,6 +38,9 @@ export const adminApi = {
     api.patch(`/admin/clients/${id}/password`, { password }),
   blockClient: (id: number) => api.patch(`/admin/clients/${id}/block`),
   unblockClient: (id: number) => api.patch(`/admin/clients/${id}/unblock`),
+
+  getAdminNotifications: () => api.get<any[]>('/admin/notifications'),
+  markAllAdminNotificationsRead: () => api.patch('/admin/notifications/read-all'),
 
   getSettings: () => api.get<PricingConfig>('/admin/settings'),
   updateSettings: (basePrice: number, pricePerKm: number) =>

@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { Search, Bell, Settings, LogOut } from 'lucide-react'
+import { Search, Bell, Settings, LogOut, FileText } from 'lucide-react'
 import Sidebar from './Sidebar'
 import AdminProfileModal from './AdminProfileModal'
 import { useAuth } from '../context/AuthContext'
+import { useAdminNotifications } from '../hooks/useAdminNotifications'
+import type { AdminNotification } from '../hooks/useAdminNotifications'
 
 const pageTitles: Record<string, string> = {
   '/': 'Tableau de bord',
@@ -21,17 +23,20 @@ export default function Layout() {
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [bellOpen, setBellOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const bellRef = useRef<HTMLDivElement>(null)
+
+  const { notifications, unreadCount, markAllRead } = useAdminNotifications()
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false)
-      }
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false)
+      if (bellRef.current && !bellRef.current.contains(e.target as Node)) setBellOpen(false)
     }
-    if (menuOpen) document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [menuOpen])
+  }, [])
 
   if (!token) return <Navigate to="/login" replace />
 
@@ -53,9 +58,51 @@ export default function Layout() {
           </div>
 
           <div className="flex items-center gap-4 ml-auto">
-            <div className="relative">
-              <Bell size={20} className="text-gray-400" />
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
+            <div className="relative" ref={bellRef}>
+              <button
+                onClick={() => { setBellOpen(v => !v); if (!bellOpen) markAllRead() }}
+                className="relative p-1 cursor-pointer"
+              >
+                <Bell size={20} className="text-gray-400 hover:text-[#0D1B2A] transition" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold px-0.5">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {bellOpen && (
+                <div className="absolute right-0 top-10 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                    <p className="text-sm font-bold text-[#0D1B2A]">Notifications</p>
+                    {notifications.length > 0 && (
+                      <button onClick={markAllRead} className="text-xs text-gray-400 hover:text-[#0D1B2A] cursor-pointer">
+                        Tout marquer lu
+                      </button>
+                    )}
+                  </div>
+                  <div className="max-h-72 overflow-y-auto">
+                    {notifications.length === 0 ? (
+                      <p className="text-sm text-gray-400 text-center py-8">Aucune notification</p>
+                    ) : (
+                      notifications.map((n: AdminNotification) => (
+                        <div key={n.id} className={`flex items-start gap-3 px-4 py-3 border-b border-gray-50 last:border-0 ${n.read ? '' : 'bg-blue-50/50'}`}>
+                          <div className="w-8 h-8 rounded-full bg-[#0D1B2A] flex items-center justify-center shrink-0 mt-0.5">
+                            <FileText size={14} className="text-[#CCFF00]" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-[#0D1B2A]">{n.message}</p>
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              {new Date(n.timestamp).toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' })}
+                            </p>
+                          </div>
+                          {!n.read && <span className="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-1.5" />}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Avatar + dropdown */}

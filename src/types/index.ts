@@ -20,6 +20,13 @@ export interface AdminOrder {
   updatedAt: string
   client: UserSummary
   driver: UserSummary | null
+  pickupPhotoUrl?: string | null
+}
+
+export interface DriverDocument {
+  type: string
+  fileUrl: string
+  uploadedAt: string
 }
 
 export interface AdminDriver {
