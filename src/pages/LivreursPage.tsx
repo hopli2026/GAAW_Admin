@@ -4,6 +4,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
 import type { AdminDriver } from '../types'
 import DriverDetailModal from '../components/DriverDetailModal'
+import { TableLoader } from '../components/ui/Spinner'
+import ConfirmModal from '../components/ui/ConfirmModal'
+import { useToast } from '../context/ToastContext'
 
 const AVATAR_COLORS = ['bg-green-500', 'bg-orange-400', 'bg-yellow-400', 'bg-blue-400', 'bg-purple-400', 'bg-pink-400']
 
@@ -24,8 +27,10 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function LivreursPage() {
   const queryClient = useQueryClient()
+  const { toast } = useToast()
   const [selected, setSelected] = useState<AdminDriver | null>(null)
   const [search, setSearch] = useState('')
+  const [confirm, setConfirm] = useState<{ id: number; action: 'validate' | 'suspend' } | null>(null)
 
   const { data: drivers = [], isLoading } = useQuery({
     queryKey: ['drivers'],
@@ -34,12 +39,21 @@ export default function LivreursPage() {
 
   const validateMutation = useMutation({
     mutationFn: (id: number) => adminApi.validateDriver(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['drivers'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['drivers'] }); toast('Livreur validé') },
+    onError: () => toast('Erreur lors de la validation', 'error'),
   })
   const suspendMutation = useMutation({
     mutationFn: (id: number) => adminApi.suspendDriver(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['drivers'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['drivers'] }); toast('Livreur suspendu') },
+    onError: () => toast('Erreur lors de la suspension', 'error'),
   })
+
+  const handleConfirm = () => {
+    if (!confirm) return
+    if (confirm.action === 'validate') validateMutation.mutate(confirm.id)
+    else suspendMutation.mutate(confirm.id)
+    setConfirm(null)
+  }
 
   const active  = drivers.filter(d => d.driverStatus === 'ACTIVE').length
   const pending = drivers.filter(d => d.driverStatus !== 'ACTIVE' && d.driverStatus !== 'SUSPENDED').length
@@ -82,7 +96,7 @@ export default function LivreursPage() {
           </thead>
           <tbody>
             {isLoading ? (
-              <tr><td colSpan={6} className="text-center py-12 text-gray-400 text-sm">Chargement...</td></tr>
+              <TableLoader cols={6} />
             ) : filtered.length === 0 ? (
               <tr><td colSpan={6} className="text-center py-12 text-gray-400 text-sm">{search ? 'Aucun résultat.' : 'Aucun livreur.'}</td></tr>
             ) : filtered.map((d, i) => (
@@ -117,7 +131,7 @@ export default function LivreursPage() {
                   <div className="flex items-center gap-2">
                     {d.driverStatus === 'ACTIVE' ? (
                       <button
-                        onClick={() => suspendMutation.mutate(d.id)}
+                        onClick={() => setConfirm({ id: d.id, action: 'suspend' })}
                         className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center text-red-400 hover:bg-red-50 transition cursor-pointer"
                       >
                         <Ban size={14} />
@@ -125,14 +139,14 @@ export default function LivreursPage() {
                     ) : (
                       <>
                         <button
-                          onClick={() => validateMutation.mutate(d.id)}
+                          onClick={() => setConfirm({ id: d.id, action: 'validate' })}
                           className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600 hover:bg-green-200 transition cursor-pointer"
                         >
                           <Check size={14} />
                         </button>
                         {d.driverStatus !== 'SUSPENDED' && (
                           <button
-                            onClick={() => suspendMutation.mutate(d.id)}
+                            onClick={() => setConfirm({ id: d.id, action: 'suspend' })}
                             className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center text-red-500 hover:bg-red-200 transition cursor-pointer"
                           >
                             <X size={14} />
@@ -156,6 +170,19 @@ export default function LivreursPage() {
           driver={selected}
           onClose={() => setSelected(null)}
           onUpdated={(updated) => setSelected(updated)}
+        />
+      )}
+
+      {confirm && (
+        <ConfirmModal
+          title={confirm.action === 'suspend' ? 'Suspendre ce livreur ?' : 'Valider ce livreur ?'}
+          message={confirm.action === 'suspend'
+            ? 'Le livreur sera suspendu et ne pourra plus accepter de courses.'
+            : 'Le livreur sera activé et pourra accepter des courses.'}
+          confirmLabel={confirm.action === 'suspend' ? 'Suspendre' : 'Valider'}
+          danger={confirm.action === 'suspend'}
+          onConfirm={handleConfirm}
+          onCancel={() => setConfirm(null)}
         />
       )}
     </div>

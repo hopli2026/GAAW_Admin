@@ -4,11 +4,16 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
 import type { AdminClient } from '../types'
 import ClientDetailModal from '../components/ClientDetailModal'
+import { TableLoader } from '../components/ui/Spinner'
+import ConfirmModal from '../components/ui/ConfirmModal'
+import { useToast } from '../context/ToastContext'
 
 export default function ClientsPage() {
   const queryClient = useQueryClient()
+  const { toast } = useToast()
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<AdminClient | null>(null)
+  const [confirm, setConfirm] = useState<{ id: number; action: 'block' | 'unblock' } | null>(null)
 
   const { data: clients = [], isLoading } = useQuery({
     queryKey: ['clients'],
@@ -17,12 +22,21 @@ export default function ClientsPage() {
 
   const blockMutation = useMutation({
     mutationFn: (id: number) => adminApi.blockClient(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['clients'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['clients'] }); toast('Client bloqué') },
+    onError: () => toast('Erreur lors du blocage', 'error'),
   })
   const unblockMutation = useMutation({
     mutationFn: (id: number) => adminApi.unblockClient(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['clients'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['clients'] }); toast('Client débloqué') },
+    onError: () => toast('Erreur lors du déblocage', 'error'),
   })
+
+  const handleConfirm = () => {
+    if (!confirm) return
+    if (confirm.action === 'block') blockMutation.mutate(confirm.id)
+    else unblockMutation.mutate(confirm.id)
+    setConfirm(null)
+  }
 
   const filtered = clients.filter(c =>
     `${c.firstName ?? ''} ${c.lastName ?? ''}`.toLowerCase().includes(search.toLowerCase()) ||
@@ -54,7 +68,7 @@ export default function ClientsPage() {
           </thead>
           <tbody>
             {isLoading ? (
-              <tr><td colSpan={5} className="text-center py-12 text-gray-400 text-sm">Chargement...</td></tr>
+              <TableLoader cols={5} />
             ) : filtered.length === 0 ? (
               <tr><td colSpan={5} className="text-center py-12 text-gray-400 text-sm">Aucun client.</td></tr>
             ) : filtered.map((c, i) => (
@@ -87,7 +101,7 @@ export default function ClientsPage() {
                   <div className="flex items-center gap-2">
                     {c.blocked ? (
                       <button
-                        onClick={() => unblockMutation.mutate(c.id)}
+                        onClick={() => setConfirm({ id: c.id, action: 'unblock' })}
                         className="w-8 h-8 rounded-lg border border-green-200 flex items-center justify-center text-green-500 hover:bg-green-50 transition cursor-pointer"
                         title="Débloquer"
                       >
@@ -95,7 +109,7 @@ export default function ClientsPage() {
                       </button>
                     ) : (
                       <button
-                        onClick={() => blockMutation.mutate(c.id)}
+                        onClick={() => setConfirm({ id: c.id, action: 'block' })}
                         className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center text-red-400 hover:bg-red-50 transition cursor-pointer"
                         title="Bloquer"
                       >
@@ -118,6 +132,19 @@ export default function ClientsPage() {
           client={selected}
           onClose={() => setSelected(null)}
           onUpdated={(updated) => setSelected(updated)}
+        />
+      )}
+
+      {confirm && (
+        <ConfirmModal
+          title={confirm.action === 'block' ? 'Bloquer ce client ?' : 'Débloquer ce client ?'}
+          message={confirm.action === 'block'
+            ? 'Le client ne pourra plus passer de commandes.'
+            : 'Le client retrouvera accès à l\'application.'}
+          confirmLabel={confirm.action === 'block' ? 'Bloquer' : 'Débloquer'}
+          danger={confirm.action === 'block'}
+          onConfirm={handleConfirm}
+          onCancel={() => setConfirm(null)}
         />
       )}
     </div>

@@ -17,6 +17,7 @@ export const adminApi = {
 
   getOrders: () => api.get<AdminOrder[]>('/admin/orders'),
   getOrder: (id: number) => api.get<AdminOrder>(`/admin/orders/${id}`),
+  cancelOrder: (id: number) => api.patch(`/admin/orders/${id}/cancel`),
   getDriverOrders: (driverId: number) => api.get<AdminOrder[]>(`/admin/drivers/${driverId}/orders`),
   getDriverDocuments: (driverId: number) => api.get<DriverDocument[]>(`/admin/drivers/${driverId}/documents`),
   getClientOrders: (clientId: number) => api.get<AdminOrder[]>(`/admin/clients/${clientId}/orders`),

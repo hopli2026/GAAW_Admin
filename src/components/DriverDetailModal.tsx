@@ -21,6 +21,14 @@ const DOC_LABELS: Record<string, string> = {
 
 const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif']
 
+const API_ORIGIN = (import.meta.env.VITE_API_URL || 'http://localhost:8080/api').replace('/api', '')
+
+function toAbsoluteUrl(url: string) {
+  if (!url) return url
+  if (url.startsWith('http')) return url
+  return `${API_ORIGIN}${url}`
+}
+
 function isImage(url: string) {
   const ext = url.split('?')[0].split('.').pop()?.toLowerCase()
   return IMAGE_EXTENSIONS.includes(ext ?? '')
@@ -29,6 +37,7 @@ function isImage(url: string) {
 function DocumentCard({ doc }: { doc: DriverDocument }) {
   const [expanded, setExpanded] = useState(false)
   const label = DOC_LABELS[doc.type] ?? doc.type
+  const absUrl = toAbsoluteUrl(doc.fileUrl)
   const image = isImage(doc.fileUrl)
 
   return (
@@ -40,7 +49,7 @@ function DocumentCard({ doc }: { doc: DriverDocument }) {
         </div>
         <div className="flex items-center gap-2">
           <a
-            href={doc.fileUrl}
+            href={absUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-[#0D1B2A] transition"
@@ -60,7 +69,7 @@ function DocumentCard({ doc }: { doc: DriverDocument }) {
       </div>
       {expanded && image && (
         <img
-          src={doc.fileUrl}
+          src={absUrl}
           alt={label}
           className="w-full object-contain max-h-64 bg-black/5"
         />
@@ -86,7 +95,7 @@ function OrderRow({ order }: { order: AdminOrder }) {
   return (
     <div className="flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-0">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-[#0D1B2A]">ORD-{order.id}</p>
+        <p className="text-sm font-semibold text-[#0D1B2A]">COURSE-{order.id}</p>
         <p className="text-xs text-gray-400 truncate">{order.pickupAddress.split(',')[0]} → {order.deliveryAddress.split(',')[0]}</p>
       </div>
       <div className="text-right shrink-0">

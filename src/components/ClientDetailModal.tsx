@@ -22,7 +22,7 @@ function OrderRow({ order }: { order: AdminOrder }) {
   return (
     <div className="flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-0">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-[#0D1B2A]">ORD-{order.id}</p>
+        <p className="text-sm font-semibold text-[#0D1B2A]">COURSE-{order.id}</p>
         <p className="text-xs text-gray-400">{date} — {order.pickupAddress.split(',')[0]}</p>
       </div>
       <div className="text-right shrink-0">
