@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { X, ShoppingBag, Euro, TrendingUp, Pencil, Save, KeyRound, Eye, EyeOff } from 'lucide-react'
+import { X, ShoppingBag, Euro, TrendingUp, Pencil, Save, KeyRound, Eye, EyeOff, Trash2 } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
 import type { AdminClient, AdminOrder } from '../types'
+import ConfirmModal from './ui/ConfirmModal'
 
 const STATUS_STYLES: Record<string, string> = {
   DELIVERED:    'bg-green-100 text-green-600',
@@ -15,6 +16,7 @@ interface Props {
   client: AdminClient
   onClose: () => void
   onUpdated?: (updated: AdminClient) => void
+  onDeleted?: () => void
 }
 
 function OrderRow({ order }: { order: AdminOrder }) {
@@ -35,10 +37,12 @@ function OrderRow({ order }: { order: AdminOrder }) {
   )
 }
 
-export default function ClientDetailModal({ client, onClose, onUpdated }: Props) {
+export default function ClientDetailModal({ client, onClose, onUpdated, onDeleted }: Props) {
   const queryClient = useQueryClient()
 
   const [editing, setEditing] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
   const [form, setForm] = useState({
     firstName: client.firstName ?? '',
     lastName:  client.lastName  ?? '',
@@ -75,6 +79,20 @@ export default function ClientDetailModal({ client, onClose, onUpdated }: Props)
       setPwSection(false)
       setPwSuccess(true)
       setTimeout(() => setPwSuccess(false), 3000)
+    },
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: () => adminApi.deleteClient(client.id),
+    onSuccess: () => {
+      queryClient.setQueryData<AdminClient[]>(['clients'], old =>
+        old ? old.filter(c => c.id !== client.id) : old
+      )
+      onDeleted?.()
+    },
+    onError: (e: any) => {
+      setDeleteError(e?.response?.data?.message ?? 'Erreur lors de la suppression.')
+      setShowDeleteConfirm(false)
     },
   })
 
@@ -288,8 +306,32 @@ export default function ClientDetailModal({ client, onClose, onUpdated }: Props)
               </div>
             )}
           </div>
+
+          {/* Suppression */}
+          <div className="border border-red-100 rounded-xl overflow-hidden">
+            <button
+              onClick={() => { setShowDeleteConfirm(true); setDeleteError('') }}
+              className="w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-red-500 hover:bg-red-50 transition cursor-pointer"
+            >
+              <Trash2 size={15} />
+              Supprimer le compte
+            </button>
+            {deleteError && (
+              <p className="px-4 pb-3 text-xs text-red-500">{deleteError}</p>
+            )}
+          </div>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <ConfirmModal
+          title="Supprimer le client"
+          message={`Supprimer définitivement ${client.firstName} ${client.lastName} ? Cette action est irréversible.`}
+          confirmLabel={deleteMutation.isPending ? 'Suppression…' : 'Supprimer'}
+          onConfirm={() => deleteMutation.mutate()}
+          onCancel={() => setShowDeleteConfirm(false)}
+        />
+      )}
     </div>
   )
 }

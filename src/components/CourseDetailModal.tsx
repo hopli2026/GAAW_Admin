@@ -143,8 +143,8 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-gray-50 rounded-xl p-4">
                 <p className="text-xs text-gray-400 font-semibold mb-2">Client</p>
-                <p className="font-bold text-[#0D1B2A] text-sm">{order.client.firstName ?? ''} {order.client.lastName ?? ''}</p>
-                <p className="text-xs text-gray-400">{order.client.phone ?? '—'}</p>
+                <p className="font-bold text-[#0D1B2A] text-sm">{order.client ? `${order.client.firstName ?? ''} ${order.client.lastName ?? ''}` : 'Compte supprimé'}</p>
+                <p className="text-xs text-gray-400">{order.client?.phone ?? '—'}</p>
               </div>
               <div className="bg-gray-50 rounded-xl p-4">
                 <p className="text-xs text-gray-400 font-semibold mb-2">Livreur</p>

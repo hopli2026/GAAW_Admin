@@ -18,7 +18,7 @@ export interface AdminOrder {
   paymentMethod: string
   createdAt: string
   updatedAt: string
-  client: UserSummary
+  client: UserSummary | null
   driver: UserSummary | null
   pickupPhotoUrl?: string | null
 }

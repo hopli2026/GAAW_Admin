@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { X, Truck, CheckCircle, XCircle, Euro, Pencil, Save, KeyRound, Eye, EyeOff, FileText, ExternalLink } from 'lucide-react'
+import { X, Truck, CheckCircle, XCircle, Euro, Pencil, Save, KeyRound, Eye, EyeOff, FileText, ExternalLink, Trash2 } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
 import type { AdminDriver, AdminOrder, DriverDocument } from '../types'
+import ConfirmModal from './ui/ConfirmModal'
 
 const VEHICLE_LABELS: Record<string, string> = {
   BICYCLE: 'Vélo',
@@ -89,6 +90,7 @@ interface Props {
   driver: AdminDriver
   onClose: () => void
   onUpdated?: (updated: AdminDriver) => void
+  onDeleted?: () => void
 }
 
 function OrderRow({ order }: { order: AdminOrder }) {
@@ -108,10 +110,12 @@ function OrderRow({ order }: { order: AdminOrder }) {
   )
 }
 
-export default function DriverDetailModal({ driver, onClose, onUpdated }: Props) {
+export default function DriverDetailModal({ driver, onClose, onUpdated, onDeleted }: Props) {
   const queryClient = useQueryClient()
 
   const [editing, setEditing] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
   const [form, setForm] = useState({
     firstName: driver.firstName ?? '',
     lastName:  driver.lastName  ?? '',
@@ -153,6 +157,20 @@ export default function DriverDetailModal({ driver, onClose, onUpdated }: Props)
       setPwSection(false)
       setPwSuccess(true)
       setTimeout(() => setPwSuccess(false), 3000)
+    },
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: () => adminApi.deleteDriver(driver.id),
+    onSuccess: () => {
+      queryClient.setQueryData<AdminDriver[]>(['drivers'], old =>
+        old ? old.filter(d => d.id !== driver.id) : old
+      )
+      onDeleted?.()
+    },
+    onError: (e: any) => {
+      setDeleteError(e?.response?.data?.message ?? 'Erreur lors de la suppression.')
+      setShowDeleteConfirm(false)
     },
   })
 
@@ -388,8 +406,32 @@ export default function DriverDetailModal({ driver, onClose, onUpdated }: Props)
               </div>
             )}
           </div>
+
+          {/* Suppression */}
+          <div className="border border-red-100 rounded-xl overflow-hidden">
+            <button
+              onClick={() => { setShowDeleteConfirm(true); setDeleteError('') }}
+              className="w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-red-500 hover:bg-red-50 transition cursor-pointer"
+            >
+              <Trash2 size={15} />
+              Supprimer le compte
+            </button>
+            {deleteError && (
+              <p className="px-4 pb-3 text-xs text-red-500">{deleteError}</p>
+            )}
+          </div>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <ConfirmModal
+          title="Supprimer le livreur"
+          message={`Supprimer définitivement ${driver.firstName} ${driver.lastName} ? Cette action est irréversible.`}
+          confirmLabel={deleteMutation.isPending ? 'Suppression…' : 'Supprimer'}
+          onConfirm={() => deleteMutation.mutate()}
+          onCancel={() => setShowDeleteConfirm(false)}
+        />
+      )}
     </div>
   )
 }

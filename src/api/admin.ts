@@ -30,6 +30,7 @@ export const adminApi = {
     api.patch(`/admin/drivers/${id}/password`, { password }),
   validateDriver: (id: number) => api.patch(`/admin/drivers/${id}/validate`),
   suspendDriver: (id: number) => api.patch(`/admin/drivers/${id}/suspend`),
+  deleteDriver: (id: number) => api.delete(`/admin/drivers/${id}`),
 
   getClients: () => api.get<AdminClient[]>('/admin/clients'),
   getClient: (id: number) => api.get<AdminClient>(`/admin/clients/${id}`),
@@ -39,6 +40,7 @@ export const adminApi = {
     api.patch(`/admin/clients/${id}/password`, { password }),
   blockClient: (id: number) => api.patch(`/admin/clients/${id}/block`),
   unblockClient: (id: number) => api.patch(`/admin/clients/${id}/unblock`),
+  deleteClient: (id: number) => api.delete(`/admin/clients/${id}`),
 
   getAdminNotifications: () => api.get<any[]>('/admin/notifications'),
   markAllAdminNotificationsRead: () => api.patch('/admin/notifications/read-all'),

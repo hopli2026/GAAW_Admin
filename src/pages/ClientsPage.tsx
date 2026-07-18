@@ -132,6 +132,7 @@ export default function ClientsPage() {
           client={selected}
           onClose={() => setSelected(null)}
           onUpdated={(updated) => setSelected(updated)}
+          onDeleted={() => setSelected(null)}
         />
       )}
 

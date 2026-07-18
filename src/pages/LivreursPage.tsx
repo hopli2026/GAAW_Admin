@@ -170,6 +170,7 @@ export default function LivreursPage() {
           driver={selected}
           onClose={() => setSelected(null)}
           onUpdated={(updated) => setSelected(updated)}
+          onDeleted={() => setSelected(null)}
         />
       )}
 

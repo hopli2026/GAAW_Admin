@@ -46,7 +46,7 @@ export default function CoursesPage() {
     const q = search.toLowerCase()
     const matchSearch = !q ||
       String(o.id).includes(q) ||
-      `${o.client.firstName ?? ''} ${o.client.lastName ?? ''}`.toLowerCase().includes(q) ||
+      `${o.client?.firstName ?? ''} ${o.client?.lastName ?? ''}`.toLowerCase().includes(q) ||
       (o.pickupAddress ?? '').toLowerCase().includes(q) ||
       (o.deliveryAddress ?? '').toLowerCase().includes(q) ||
       (o.status ?? '').toLowerCase().includes(q)
@@ -149,8 +149,8 @@ export default function CoursesPage() {
                   <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
                 </td>
                 <td className="px-6 py-4">
-                  <p className="font-semibold text-[#0D1B2A] text-sm">{order.client.firstName} {order.client.lastName}</p>
-                  <p className="text-xs text-gray-400">ID: CLIENT-{order.client.id}</p>
+                  <p className="font-semibold text-[#0D1B2A] text-sm">{order.client ? `${order.client.firstName} ${order.client.lastName}` : 'Compte supprimé'}</p>
+                  <p className="text-xs text-gray-400">{order.client ? `ID: CLIENT-${order.client.id}` : '—'}</p>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
