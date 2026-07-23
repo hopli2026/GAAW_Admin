@@ -38,6 +38,7 @@ export interface AdminDriver {
   vehicleType: string | null
   driverStatus: string
   walletBalance: number
+  cashCommissionOwed: number
   blocked: boolean
 }
 

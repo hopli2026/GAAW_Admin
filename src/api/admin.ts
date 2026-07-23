@@ -30,6 +30,7 @@ export const adminApi = {
     api.patch(`/admin/drivers/${id}/password`, { password }),
   validateDriver: (id: number) => api.patch(`/admin/drivers/${id}/validate`),
   suspendDriver: (id: number) => api.patch(`/admin/drivers/${id}/suspend`),
+  requestResubmission: (id: number) => api.patch(`/admin/drivers/${id}/request-resubmission`),
   deleteDriver: (id: number) => api.delete(`/admin/drivers/${id}`),
 
   getClients: () => api.get<AdminClient[]>('/admin/clients'),
