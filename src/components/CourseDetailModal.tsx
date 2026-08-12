@@ -63,6 +63,10 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const [confirmCancel, setConfirmCancel] = useState(false)
+  // La photo est stockée sur le disque local du backend, qui est éphémère sur Render :
+  // l'URL peut rester en base alors que le fichier a disparu. Sans ce drapeau, on
+  // afficherait une icône d'image cassée sans explication.
+  const [photoMissing, setPhotoMissing] = useState(false)
 
   const cancelMutation = useMutation({
     mutationFn: () => adminApi.cancelOrder(order.id),
@@ -182,11 +186,12 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
             {/* Photo */}
             <div>
               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Photo de colis (retrait)</h3>
-              {order.pickupPhotoUrl ? (
+              {order.pickupPhotoUrl && !photoMissing ? (
                 <div className="rounded-xl overflow-hidden border border-gray-100">
                   <img
                     src={toAbsoluteUrl(order.pickupPhotoUrl)}
                     alt="Photo du colis"
+                    onError={() => setPhotoMissing(true)}
                     className="w-full object-contain max-h-72 bg-black/5"
                   />
                   <div className="flex items-center justify-end px-3 py-2 bg-gray-50">
@@ -201,9 +206,19 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
                   </div>
                 </div>
               ) : (
-                <div className="rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center py-8 gap-2">
+                <div className="rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center py-8 gap-2 px-4 text-center">
                   <img src={gaawLogo} alt="GAAW" className="w-12 h-12 opacity-20" />
-                  <p className="text-sm text-gray-300">Aucune photo disponible</p>
+                  {photoMissing ? (
+                    <>
+                      <p className="text-sm text-gray-400">Photo introuvable sur le serveur</p>
+                      <p className="text-xs text-gray-300">
+                        Le fichier a été perdu lors d'un redéploiement. Les photos ne sont pas
+                        encore stockées de façon durable.
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-sm text-gray-300">Aucune photo disponible</p>
+                  )}
                 </div>
               )}
             </div>

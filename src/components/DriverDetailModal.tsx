@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import {
-  X, Truck, CheckCircle, XCircle, Euro, Pencil, Save, KeyRound,
-  Eye, EyeOff, FileText, ExternalLink, Trash2, RefreshCw, AlertCircle,
+  X, Truck, CheckCircle, XCircle, Euro, Pencil, Save,
+  FileText, ExternalLink, Trash2, RefreshCw, AlertCircle,
   User, FolderOpen, Clock, Settings2,
+  // KeyRound, Eye, EyeOff : réservés à la section mot de passe, désactivée plus bas.
 } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
@@ -124,10 +125,12 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
     email:     driver.email     ?? '',
     phone:     driver.phone     ?? '',
   })
-  const [pwSection, setPwSection] = useState(false)
-  const [pw, setPw]               = useState('')
-  const [showPw, setShowPw]       = useState(false)
-  const [pwSuccess, setPwSuccess] = useState(false)
+  // Changement de mot de passe désactivé : un administrateur ne devrait pas pouvoir
+  // définir le mot de passe d'un livreur. Conservé en commentaire en attendant l'arbitrage.
+  // const [pwSection, setPwSection] = useState(false)
+  // const [pw, setPw]               = useState('')
+  // const [showPw, setShowPw]       = useState(false)
+  // const [pwSuccess, setPwSuccess] = useState(false)
 
   const { data: orders = [], isLoading: ordersLoading } = useQuery({
     queryKey: ['driver-orders', driver.id],
@@ -148,10 +151,11 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
       setEditing(false)
     },
   })
-  const passwordMutation = useMutation({
-    mutationFn: () => adminApi.resetDriverPassword(driver.id, pw),
-    onSuccess: () => { setPw(''); setPwSection(false); setPwSuccess(true); setTimeout(() => setPwSuccess(false), 3000) },
-  })
+  // Désactivé avec la section mot de passe (voir plus haut).
+  // const passwordMutation = useMutation({
+  //   mutationFn: () => adminApi.resetDriverPassword(driver.id, pw),
+  //   onSuccess: () => { setPw(''); setPwSection(false); setPwSuccess(true); setTimeout(() => setPwSuccess(false), 3000) },
+  // })
   const deleteMutation = useMutation({
     mutationFn: () => adminApi.deleteDriver(driver.id),
     onSuccess: () => {
@@ -355,7 +359,12 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
                 </div>
               </div>
 
-              {/* Mot de passe */}
+              {/*
+                Section « Sécurité / Changer le mot de passe » désactivée.
+                Un administrateur ne devrait pas pouvoir définir le mot de passe d'un
+                livreur. L'état et la mutation associés sont commentés plus haut, et
+                l'endpoint adminApi.resetDriverPassword reste disponible côté API.
+
               <div>
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Sécurité</p>
                 <div className="border border-gray-100 rounded-xl overflow-hidden">
@@ -386,6 +395,7 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
                   )}
                 </div>
               </div>
+              */}
             </div>
           )}
 

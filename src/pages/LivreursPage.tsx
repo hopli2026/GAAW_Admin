@@ -136,7 +136,7 @@ export default function LivreursPage() {
                       >
                         <Ban size={14} />
                       </button>
-                    ) : (
+                    ) : d.driverStatus === 'DOCUMENTS_SUBMITTED' || d.driverStatus === 'SUSPENDED' ? (
                       <>
                         <button
                           onClick={() => setConfirm({ id: d.id, action: 'validate' })}
@@ -153,7 +153,7 @@ export default function LivreursPage() {
                           </button>
                         )}
                       </>
-                    )}
+                    ) : null}
                     <button onClick={() => setSelected(d)} className="text-gray-400 hover:text-[#0D1B2A] transition ml-1 cursor-pointer">
                       <Eye size={18} />
                     </button>

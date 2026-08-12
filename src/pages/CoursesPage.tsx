@@ -43,9 +43,13 @@ export default function CoursesPage() {
   })
 
   const filtered = orders.filter(o => {
-    const q = search.toLowerCase()
+    const q = search.trim().toLowerCase()
     const matchSearch = !q ||
       String(o.id).includes(q) ||
+      // La référence affichée dans le tableau est « COURSE-42 » : sans cette ligne,
+      // copier-coller ce qu'on voit à l'écran ne renvoie aucun résultat.
+      `course-${o.id}`.includes(q) ||
+      `client-${o.client?.id ?? ''}`.includes(q) ||
       `${o.client?.firstName ?? ''} ${o.client?.lastName ?? ''}`.toLowerCase().includes(q) ||
       (o.pickupAddress ?? '').toLowerCase().includes(q) ||
       (o.deliveryAddress ?? '').toLowerCase().includes(q) ||
@@ -78,7 +82,7 @@ export default function CoursesPage() {
         <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2 w-56">
           <Search size={14} className="text-gray-400 shrink-0" />
           <input
-            type="text" placeholder="ID, client, adresse…" value={search}
+            type="text" placeholder="COURSE-12, client, adresse…" value={search}
             onChange={e => setSearch(e.target.value)}
             className="outline-none text-sm text-gray-600 w-full bg-transparent"
           />

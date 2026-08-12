@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { X, ShoppingBag, Euro, TrendingUp, Pencil, Save, KeyRound, Eye, EyeOff, Trash2 } from 'lucide-react'
+// KeyRound, Eye, EyeOff : réservés à la section mot de passe, désactivée plus bas.
+import { X, ShoppingBag, Euro, TrendingUp, Pencil, Save, Trash2 } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../api/admin'
 import type { AdminClient, AdminOrder } from '../types'
@@ -50,10 +51,12 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
     phone:     client.phone     ?? '',
   })
 
-  const [pwSection, setPwSection] = useState(false)
-  const [pw, setPw]               = useState('')
-  const [showPw, setShowPw]       = useState(false)
-  const [pwSuccess, setPwSuccess] = useState(false)
+  // Changement de mot de passe désactivé : un administrateur ne devrait pas pouvoir
+  // définir le mot de passe d'un client. Conservé en commentaire en attendant l'arbitrage.
+  // const [pwSection, setPwSection] = useState(false)
+  // const [pw, setPw]               = useState('')
+  // const [showPw, setShowPw]       = useState(false)
+  // const [pwSuccess, setPwSuccess] = useState(false)
 
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ['client-orders', client.id],
@@ -72,15 +75,16 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
     },
   })
 
-  const passwordMutation = useMutation({
-    mutationFn: () => adminApi.resetClientPassword(client.id, pw),
-    onSuccess: () => {
-      setPw('')
-      setPwSection(false)
-      setPwSuccess(true)
-      setTimeout(() => setPwSuccess(false), 3000)
-    },
-  })
+  // Désactivé avec la section mot de passe (voir plus haut).
+  // const passwordMutation = useMutation({
+  //   mutationFn: () => adminApi.resetClientPassword(client.id, pw),
+  //   onSuccess: () => {
+  //     setPw('')
+  //     setPwSection(false)
+  //     setPwSuccess(true)
+  //     setTimeout(() => setPwSuccess(false), 3000)
+  //   },
+  // })
 
   const deleteMutation = useMutation({
     mutationFn: () => adminApi.deleteClient(client.id),
@@ -247,7 +251,12 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
             </div>
           </div>
 
-          {/* Section mot de passe */}
+          {/*
+            Section « Changer le mot de passe » désactivée.
+            Un administrateur ne devrait pas pouvoir définir le mot de passe d'un client.
+            L'état et la mutation associés sont commentés plus haut, et l'endpoint
+            adminApi.resetClientPassword reste disponible côté API.
+
           <div className="border border-gray-100 rounded-xl overflow-hidden">
             <button
               onClick={() => { setPwSection(v => !v); setPw(''); setPwSuccess(false) }}
@@ -292,6 +301,7 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
               </div>
             )}
           </div>
+          */}
 
           {/* Historique des commandes */}
           <div>
