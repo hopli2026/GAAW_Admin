@@ -21,6 +21,7 @@ export interface AdminOrder {
   client: UserSummary | null
   driver: UserSummary | null
   pickupPhotoUrl?: string | null
+  deliveryPhotoUrl?: string | null
 }
 
 export interface DriverDocument {

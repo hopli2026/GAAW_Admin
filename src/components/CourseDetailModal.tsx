@@ -66,7 +66,8 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
   // La photo est stockée sur le disque local du backend, qui est éphémère sur Render :
   // l'URL peut rester en base alors que le fichier a disparu. Sans ce drapeau, on
   // afficherait une icône d'image cassée sans explication.
-  const [photoMissing, setPhotoMissing] = useState(false)
+  const [pickupPhotoMissing, setPickupPhotoMissing] = useState(false)
+  const [deliveryPhotoMissing, setDeliveryPhotoMissing] = useState(false)
 
   const cancelMutation = useMutation({
     mutationFn: () => adminApi.cancelOrder(order.id),
@@ -82,6 +83,49 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
   const date = order.createdAt
     ? new Date(order.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
     : '—'
+
+  function renderPhotoCard(label: string, url: string | null | undefined, missing: boolean, setMissing: (v: boolean) => void) {
+    return (
+      <div>
+        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">{label}</h3>
+        {url && !missing ? (
+          <div className="rounded-xl overflow-hidden border border-gray-100">
+            <img
+              src={toAbsoluteUrl(url)}
+              alt={label}
+              onError={() => setMissing(true)}
+              className="w-full object-contain max-h-72 bg-black/5"
+            />
+            <div className="flex items-center justify-end px-3 py-2 bg-gray-50">
+              <a
+                href={toAbsoluteUrl(url)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold text-[#0D1B2A] hover:underline flex items-center gap-1"
+              >
+                <MapPin size={11} /> Ouvrir en grand
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center py-8 gap-2 px-4 text-center">
+            <img src={gaawLogo} alt="GAAW" className="w-12 h-12 opacity-20" />
+            {missing ? (
+              <>
+                <p className="text-sm text-gray-400">Photo introuvable sur le serveur</p>
+                <p className="text-xs text-gray-300">
+                  Le fichier a été perdu lors d'un redéploiement. Les photos ne sont pas
+                  encore stockées de façon durable.
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-gray-300">Aucune photo disponible</p>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <>
@@ -183,44 +227,10 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
               </div>
             </div>
 
-            {/* Photo */}
-            <div>
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Photo de colis (retrait)</h3>
-              {order.pickupPhotoUrl && !photoMissing ? (
-                <div className="rounded-xl overflow-hidden border border-gray-100">
-                  <img
-                    src={toAbsoluteUrl(order.pickupPhotoUrl)}
-                    alt="Photo du colis"
-                    onError={() => setPhotoMissing(true)}
-                    className="w-full object-contain max-h-72 bg-black/5"
-                  />
-                  <div className="flex items-center justify-end px-3 py-2 bg-gray-50">
-                    <a
-                      href={toAbsoluteUrl(order.pickupPhotoUrl)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-semibold text-[#0D1B2A] hover:underline flex items-center gap-1"
-                    >
-                      <MapPin size={11} /> Ouvrir en grand
-                    </a>
-                  </div>
-                </div>
-              ) : (
-                <div className="rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center py-8 gap-2 px-4 text-center">
-                  <img src={gaawLogo} alt="GAAW" className="w-12 h-12 opacity-20" />
-                  {photoMissing ? (
-                    <>
-                      <p className="text-sm text-gray-400">Photo introuvable sur le serveur</p>
-                      <p className="text-xs text-gray-300">
-                        Le fichier a été perdu lors d'un redéploiement. Les photos ne sont pas
-                        encore stockées de façon durable.
-                      </p>
-                    </>
-                  ) : (
-                    <p className="text-sm text-gray-300">Aucune photo disponible</p>
-                  )}
-                </div>
-              )}
+            {/* Photos : retrait vs livraison, pour comparaison en cas de litige */}
+            <div className="grid grid-cols-2 gap-3">
+              {renderPhotoCard('Photo au retrait', order.pickupPhotoUrl, pickupPhotoMissing, setPickupPhotoMissing)}
+              {renderPhotoCard('Photo à la livraison', order.deliveryPhotoUrl, deliveryPhotoMissing, setDeliveryPhotoMissing)}
             </div>
           </div>
         </div>
