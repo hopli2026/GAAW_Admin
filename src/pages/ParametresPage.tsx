@@ -7,19 +7,21 @@ export default function ParametresPage() {
   const queryClient = useQueryClient()
   const { data: config } = useQuery({ queryKey: ['settings'], queryFn: () => adminApi.getSettings().then(r => r.data) })
 
-  const [basePrice, setBasePrice] = useState('5')
-  const [pricePerKm, setPricePerKm] = useState('1.5')
+  const [basePrice, setBasePrice] = useState('7.5')
+  const [pricePerKm, setPricePerKm] = useState('0.90')
+  const [largePackageSurcharge, setLargePackageSurcharge] = useState('8')
   const [saved, setSaved] = useState(false)
 
   useEffect(() => {
     if (config) {
       setBasePrice(String(config.basePrice))
       setPricePerKm(String(config.pricePerKm))
+      setLargePackageSurcharge(String(config.largePackageSurcharge))
     }
   }, [config])
 
   const mutation = useMutation({
-    mutationFn: () => adminApi.updateSettings(Number(basePrice), Number(pricePerKm)),
+    mutationFn: () => adminApi.updateSettings(Number(basePrice), Number(pricePerKm), Number(largePackageSurcharge)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['settings'] })
       setSaved(true)
@@ -43,7 +45,7 @@ export default function ParametresPage() {
         </div>
 
         <form onSubmit={handleSave}>
-          <div className="grid grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-3 gap-6 mb-3">
             <div>
               <label className="block text-sm font-medium text-[#0D1B2A] mb-2">Prix de base (€)</label>
               <input
@@ -51,7 +53,7 @@ export default function ParametresPage() {
                 onChange={(e) => setBasePrice(e.target.value)}
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#0D1B2A] outline-none focus:ring-2 focus:ring-[#CCFF00] transition"
               />
-              <p className="text-xs text-gray-400 mt-1">Frais fixes par course</p>
+              <p className="text-xs text-gray-400 mt-1">Tarif fixe pour les 5 premiers km</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-[#0D1B2A] mb-2">Prix par km (€)</label>
@@ -60,9 +62,22 @@ export default function ParametresPage() {
                 onChange={(e) => setPricePerKm(e.target.value)}
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#0D1B2A] outline-none focus:ring-2 focus:ring-[#CCFF00] transition"
               />
-              <p className="text-xs text-gray-400 mt-1">Multiplicateur kilométrique</p>
+              <p className="text-xs text-gray-400 mt-1">Appliqué au-delà de 5 km</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#0D1B2A] mb-2">Supplément Grand colis (€)</label>
+              <input
+                type="number" step="0.01" value={largePackageSurcharge}
+                onChange={(e) => setLargePackageSurcharge(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#0D1B2A] outline-none focus:ring-2 focus:ring-[#CCFF00] transition"
+              />
+              <p className="text-xs text-gray-400 mt-1">Ajouté au prix S/M, toutes distances</p>
             </div>
           </div>
+
+          <p className="text-xs text-gray-400 mb-6">
+            Formule : 0-5 km = prix de base fixe · au-delà = prix de base + (prix/km × distance) · colis Grand = + supplément, quelle que soit la distance.
+          </p>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 bg-orange-50 border border-orange-100 rounded-xl px-4 py-2.5">

@@ -47,6 +47,6 @@ export const adminApi = {
   markAllAdminNotificationsRead: () => api.patch('/admin/notifications/read-all'),
 
   getSettings: () => api.get<PricingConfig>('/admin/settings'),
-  updateSettings: (basePrice: number, pricePerKm: number) =>
-    api.put<PricingConfig>('/admin/settings', { basePrice, pricePerKm }),
+  updateSettings: (basePrice: number, pricePerKm: number, largePackageSurcharge: number) =>
+    api.put<PricingConfig>('/admin/settings', { basePrice, pricePerKm, largePackageSurcharge }),
 }

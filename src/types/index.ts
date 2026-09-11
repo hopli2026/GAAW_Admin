@@ -66,6 +66,7 @@ export interface PricingConfig {
   id: number
   basePrice: number
   pricePerKm: number
+  largePackageSurcharge: number
 }
 
 export interface AuthUser {
