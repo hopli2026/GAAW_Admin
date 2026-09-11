@@ -165,7 +165,7 @@ export default function CoursesPage() {
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="font-bold text-[#0D1B2A]">{order.price != null ? `${order.price}€` : '—'}</span>
+                  <span className="font-bold text-[#0D1B2A]">{order.price != null ? `${order.price.toFixed(2)}€` : '—'}</span>
                 </td>
                 <td className="px-6 py-4">
                   <span className={`text-xs font-bold px-3 py-1 rounded-full ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-500'}`}>

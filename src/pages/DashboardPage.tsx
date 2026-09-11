@@ -119,7 +119,7 @@ export default function DashboardPage() {
                     <p className="text-xs text-gray-400 truncate">{order.pickupAddress} → {order.deliveryAddress}</p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="font-bold text-[#0D1B2A] text-sm">{order.price}€</p>
+                    <p className="font-bold text-[#0D1B2A] text-sm">{order.price != null ? order.price.toFixed(2) : '0.00'}€</p>
                     <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-500'}`}>
                       {STATUS_LABELS[order.status] ?? order.status}
                     </span>
