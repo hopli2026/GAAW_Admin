@@ -202,7 +202,7 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
       <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" onClick={onClose} />
 
       {/* Drawer */}
-      <div className="fixed inset-y-0 right-0 z-50 flex flex-col w-full max-w-xl bg-white shadow-2xl">
+      <div className="fixed inset-y-0 right-0 z-50 flex flex-col w-full max-w-2xl bg-white shadow-2xl">
 
         {/* Header */}
         <div className="flex items-center gap-4 px-6 py-5 border-b border-gray-100 shrink-0">
