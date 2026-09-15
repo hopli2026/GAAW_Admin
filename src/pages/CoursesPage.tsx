@@ -70,8 +70,8 @@ export default function CoursesPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-[#0D1B2A]">Suivi des Courses</h2>
-        <span className="text-sm font-medium text-[#0D1B2A] border border-gray-200 rounded-lg px-4 py-2 bg-white shadow-sm">
+        <h2 className="text-2xl font-bold text-[#0a2741]">Suivi des Courses</h2>
+        <span className="text-sm font-medium text-[#0a2741] border border-gray-200 rounded-lg px-4 py-2 bg-white shadow-sm">
           {filtered.length} / {orders.length} courses
         </span>
       </div>
@@ -149,11 +149,11 @@ export default function CoursesPage() {
             ) : filtered.map((order, i) => (
               <tr key={order.id} className={i !== filtered.length - 1 ? 'border-b border-gray-50' : ''}>
                 <td className="px-6 py-4">
-                  <p className="font-semibold text-[#0D1B2A] text-sm">COURSE-{order.id}</p>
+                  <p className="font-semibold text-[#0a2741] text-sm">COURSE-{order.id}</p>
                   <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
                 </td>
                 <td className="px-6 py-4">
-                  <p className="font-semibold text-[#0D1B2A] text-sm">{order.client ? `${order.client.firstName} ${order.client.lastName}` : 'Compte supprimé'}</p>
+                  <p className="font-semibold text-[#0a2741] text-sm">{order.client ? `${order.client.firstName} ${order.client.lastName}` : 'Compte supprimé'}</p>
                   <p className="text-xs text-gray-400">{order.client ? `ID: CLIENT-${order.client.id}` : '—'}</p>
                 </td>
                 <td className="px-6 py-4">
@@ -165,7 +165,7 @@ export default function CoursesPage() {
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="font-bold text-[#0D1B2A]">{order.price != null ? `${order.price.toFixed(2)}€` : '—'}</span>
+                  <span className="font-bold text-[#0a2741]">{order.price != null ? `${order.price.toFixed(2)}€` : '—'}</span>
                 </td>
                 <td className="px-6 py-4">
                   <span className={`text-xs font-bold px-3 py-1 rounded-full ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-500'}`}>
@@ -173,7 +173,7 @@ export default function CoursesPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <button onClick={() => setSelected(order)} className="text-gray-400 hover:text-[#0D1B2A] transition cursor-pointer">
+                  <button onClick={() => setSelected(order)} className="text-gray-400 hover:text-[#0a2741] transition cursor-pointer">
                     <Eye size={18} />
                   </button>
                 </td>

@@ -31,12 +31,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={t.id}
             className={`flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl text-sm font-semibold min-w-[260px] max-w-xs ${
-              t.type === 'success' ? 'bg-[#0D1B2A] text-white' :
+              t.type === 'success' ? 'bg-[#0a2741] text-white' :
               t.type === 'error'   ? 'bg-red-500 text-white' :
                                      'bg-gray-700 text-white'
             }`}
           >
-            {t.type === 'success' ? <CheckCircle size={16} className="shrink-0 text-[#CCFF00]" /> :
+            {t.type === 'success' ? <CheckCircle size={16} className="shrink-0 text-[#cdf900]" /> :
              t.type === 'error'   ? <XCircle size={16} className="shrink-0" /> :
                                     <Info size={16} className="shrink-0" />}
             {t.message}

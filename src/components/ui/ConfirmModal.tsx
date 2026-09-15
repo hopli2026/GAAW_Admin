@@ -16,7 +16,7 @@ export default function ConfirmModal({ title, message, confirmLabel = 'Confirmer
         <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${danger ? 'bg-red-50' : 'bg-yellow-50'}`}>
           <AlertTriangle size={22} className={danger ? 'text-red-500' : 'text-yellow-500'} />
         </div>
-        <h3 className="font-bold text-[#0D1B2A] text-center text-base mb-2">{title}</h3>
+        <h3 className="font-bold text-[#0a2741] text-center text-base mb-2">{title}</h3>
         <p className="text-sm text-gray-400 text-center mb-6">{message}</p>
         <div className="flex gap-3">
           <button
@@ -27,7 +27,7 @@ export default function ConfirmModal({ title, message, confirmLabel = 'Confirmer
           </button>
           <button
             onClick={onConfirm}
-            className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition cursor-pointer ${danger ? 'bg-red-500 hover:bg-red-600' : 'bg-[#0D1B2A] hover:opacity-90'}`}
+            className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition cursor-pointer ${danger ? 'bg-red-500 hover:bg-red-600' : 'bg-[#0a2741] hover:opacity-90'}`}
           >
             {confirmLabel}
           </button>

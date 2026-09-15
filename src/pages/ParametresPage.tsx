@@ -36,40 +36,40 @@ export default function ParametresPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-[#0D1B2A] mb-6">Paramètres</h2>
+      <h2 className="text-2xl font-bold text-[#0a2741] mb-6">Paramètres</h2>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 max-w-2xl">
         <div className="flex items-center gap-2 mb-5 pb-5 border-b border-gray-100">
-          <Settings size={20} className="text-[#0D1B2A]" />
-          <h3 className="font-bold text-[#0D1B2A] text-lg">Tarification</h3>
+          <Settings size={20} className="text-[#0a2741]" />
+          <h3 className="font-bold text-[#0a2741] text-lg">Tarification</h3>
         </div>
 
         <form onSubmit={handleSave}>
           <div className="grid grid-cols-3 gap-6 mb-3">
             <div>
-              <label className="block text-sm font-medium text-[#0D1B2A] mb-2">Prix de base (€)</label>
+              <label className="block text-sm font-medium text-[#0a2741] mb-2">Prix de base (€)</label>
               <input
                 type="number" step="0.01" value={basePrice}
                 onChange={(e) => setBasePrice(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#0D1B2A] outline-none focus:ring-2 focus:ring-[#CCFF00] transition"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#0a2741] outline-none focus:ring-2 focus:ring-[#cdf900] transition"
               />
               <p className="text-xs text-gray-400 mt-1">Tarif fixe pour les 5 premiers km</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#0D1B2A] mb-2">Prix par km (€)</label>
+              <label className="block text-sm font-medium text-[#0a2741] mb-2">Prix par km (€)</label>
               <input
                 type="number" step="0.01" value={pricePerKm}
                 onChange={(e) => setPricePerKm(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#0D1B2A] outline-none focus:ring-2 focus:ring-[#CCFF00] transition"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#0a2741] outline-none focus:ring-2 focus:ring-[#cdf900] transition"
               />
               <p className="text-xs text-gray-400 mt-1">Appliqué au-delà de 5 km</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#0D1B2A] mb-2">Supplément Grand colis (€)</label>
+              <label className="block text-sm font-medium text-[#0a2741] mb-2">Supplément Grand colis (€)</label>
               <input
                 type="number" step="0.01" value={largePackageSurcharge}
                 onChange={(e) => setLargePackageSurcharge(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#0D1B2A] outline-none focus:ring-2 focus:ring-[#CCFF00] transition"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#0a2741] outline-none focus:ring-2 focus:ring-[#cdf900] transition"
               />
               <p className="text-xs text-gray-400 mt-1">Ajouté au prix S/M, toutes distances</p>
             </div>
@@ -87,7 +87,7 @@ export default function ParametresPage() {
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="flex items-center gap-2 bg-[#CCFF00] text-[#0D1B2A] font-bold px-6 py-3 rounded-xl hover:brightness-95 active:scale-[0.98] transition disabled:opacity-60"
+              className="flex items-center gap-2 bg-[#cdf900] text-[#0a2741] font-bold px-6 py-3 rounded-xl hover:brightness-95 active:scale-[0.98] transition disabled:opacity-60"
             >
               <Save size={16} />
               {mutation.isPending ? 'Enregistrement...' : saved ? 'Enregistré !' : 'Enregistrer'}

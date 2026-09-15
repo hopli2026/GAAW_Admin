@@ -23,7 +23,7 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="px-5 py-4 flex items-center gap-2.5 border-b border-gray-50">
         <img src={gaawLogo} alt="GAAW" className="w-10 h-10 rounded-xl object-cover shrink-0" />
-        <span className="font-bold text-[#0D1B2A] text-sm">
+        <span className="font-bold text-[#0a2741] text-sm">
           GAAW <span className="font-normal text-gray-500">Admin</span>
         </span>
       </div>
@@ -38,14 +38,14 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
                 isActive
-                  ? 'bg-[#F4FFB8] text-[#0D1B2A] font-semibold'
-                  : 'text-gray-400 hover:text-[#0D1B2A] hover:bg-gray-50'
+                  ? 'bg-[#F4FFB8] text-[#0a2741] font-semibold'
+                  : 'text-gray-400 hover:text-[#0a2741] hover:bg-gray-50'
               }`
             }
           >
             {({ isActive }) => (
               <>
-                <Icon size={18} className={isActive ? 'text-[#0D1B2A]' : 'text-gray-400'} />
+                <Icon size={18} className={isActive ? 'text-[#0a2741]' : 'text-gray-400'} />
                 {label}
               </>
             )}
@@ -57,7 +57,7 @@ export default function Sidebar() {
       <div className="px-3 py-5 border-t border-gray-100">
         <button
           onClick={logout}
-          className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-400 hover:text-[#0D1B2A] w-full rounded-xl hover:bg-gray-50 transition"
+          className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-400 hover:text-[#0a2741] w-full rounded-xl hover:bg-gray-50 transition"
         >
           <LogOut size={18} />
           Déconnexion

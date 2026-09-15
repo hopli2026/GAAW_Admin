@@ -43,7 +43,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
-        <div className="bg-[#0D1B2A] px-8 py-12 flex flex-col items-center gap-5">
+        <div className="bg-[#0a2741] px-8 py-12 flex flex-col items-center gap-5">
           <img src={gaawLogo} alt="GAAW" className="w-24 h-24 rounded-2xl object-cover" />
           <h1 className="text-white text-2xl font-bold tracking-tight">Administration GAAW</h1>
         </div>
@@ -51,8 +51,8 @@ export default function LoginPage() {
         <div className="bg-white px-8 py-8">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="block text-[#0D1B2A] text-sm font-medium mb-2">Email</label>
-              <div className="flex items-center border border-gray-200 rounded-xl px-4 py-3.5 gap-3 focus-within:ring-2 focus-within:ring-[#CCFF00] transition">
+              <label className="block text-[#0a2741] text-sm font-medium mb-2">Email</label>
+              <div className="flex items-center border border-gray-200 rounded-xl px-4 py-3.5 gap-3 focus-within:ring-2 focus-within:ring-[#cdf900] transition">
                 <Mail size={18} className="text-gray-400 shrink-0" />
                 <input
                   type="email"
@@ -66,8 +66,8 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-[#0D1B2A] text-sm font-medium mb-2">Mot de passe</label>
-              <div className="flex items-center border border-gray-200 rounded-xl px-4 py-3.5 gap-3 focus-within:ring-2 focus-within:ring-[#CCFF00] transition">
+              <label className="block text-[#0a2741] text-sm font-medium mb-2">Mot de passe</label>
+              <div className="flex items-center border border-gray-200 rounded-xl px-4 py-3.5 gap-3 focus-within:ring-2 focus-within:ring-[#cdf900] transition">
                 <Lock size={18} className="text-gray-400 shrink-0" />
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -88,7 +88,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#CCFF00] text-[#0D1B2A] font-bold py-4 rounded-2xl hover:brightness-95 active:scale-[0.98] transition text-base disabled:opacity-60 mt-1"
+              className="bg-[#cdf900] text-[#0a2741] font-bold py-4 rounded-2xl hover:brightness-95 active:scale-[0.98] transition text-base disabled:opacity-60 mt-1"
             >
               {loading ? 'Connexion...' : 'Se connecter'}
             </button>

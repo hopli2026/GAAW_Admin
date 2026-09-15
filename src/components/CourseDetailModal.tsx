@@ -54,7 +54,7 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
       <span className="text-sm text-gray-400">{label}</span>
-      <span className="text-sm font-semibold text-[#0D1B2A]">{value}</span>
+      <span className="text-sm font-semibold text-[#0a2741]">{value}</span>
     </div>
   )
 }
@@ -101,7 +101,7 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
                 href={toAbsoluteUrl(url)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-semibold text-[#0D1B2A] hover:underline flex items-center gap-1"
+                className="text-xs font-semibold text-[#0a2741] hover:underline flex items-center gap-1"
               >
                 <MapPin size={11} /> Ouvrir en grand
               </a>
@@ -135,11 +135,11 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#0D1B2A] flex items-center justify-center">
-                <Package size={18} className="text-[#CCFF00]" />
+              <div className="w-10 h-10 rounded-xl bg-[#0a2741] flex items-center justify-center">
+                <Package size={18} className="text-[#cdf900]" />
               </div>
               <div>
-                <h2 className="font-bold text-[#0D1B2A] text-lg">COURSE-{order.id}</h2>
+                <h2 className="font-bold text-[#0a2741] text-lg">COURSE-{order.id}</h2>
                 <div className="flex items-center gap-2 mt-0.5">
                   <Calendar size={12} className="text-gray-400" />
                   <span className="text-xs text-gray-400">{date}</span>
@@ -158,7 +158,7 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
                   <XCircle size={13} /> Annuler
                 </button>
               )}
-              <button onClick={onClose} className="text-gray-400 hover:text-[#0D1B2A] transition cursor-pointer">
+              <button onClick={onClose} className="text-gray-400 hover:text-[#0a2741] transition cursor-pointer">
                 <X size={20} />
               </button>
             </div>
@@ -174,14 +174,14 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
                   <div className="absolute left-0 w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow" />
                   <div>
                     <p className="text-xs text-gray-400 mb-0.5">Départ</p>
-                    <p className="text-sm font-semibold text-[#0D1B2A]">{order.pickupAddress}</p>
+                    <p className="text-sm font-semibold text-[#0a2741]">{order.pickupAddress}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="absolute left-0 bottom-0 w-4 h-4 rounded-full bg-orange-400 border-2 border-white shadow" />
                   <div>
                     <p className="text-xs text-gray-400 mb-0.5">Destination</p>
-                    <p className="text-sm font-semibold text-[#0D1B2A]">{order.deliveryAddress}</p>
+                    <p className="text-sm font-semibold text-[#0a2741]">{order.deliveryAddress}</p>
                   </div>
                 </div>
               </div>
@@ -191,14 +191,14 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-gray-50 rounded-xl p-4">
                 <p className="text-xs text-gray-400 font-semibold mb-2">Client</p>
-                <p className="font-bold text-[#0D1B2A] text-sm">{order.client ? `${order.client.firstName ?? ''} ${order.client.lastName ?? ''}` : 'Compte supprimé'}</p>
+                <p className="font-bold text-[#0a2741] text-sm">{order.client ? `${order.client.firstName ?? ''} ${order.client.lastName ?? ''}` : 'Compte supprimé'}</p>
                 <p className="text-xs text-gray-400">{order.client?.phone ?? '—'}</p>
               </div>
               <div className="bg-gray-50 rounded-xl p-4">
                 <p className="text-xs text-gray-400 font-semibold mb-2">Livreur</p>
                 {order.driver ? (
                   <>
-                    <p className="font-bold text-[#0D1B2A] text-sm">{order.driver.firstName} {order.driver.lastName}</p>
+                    <p className="font-bold text-[#0a2741] text-sm">{order.driver.firstName} {order.driver.lastName}</p>
                     <p className="text-xs text-gray-400">{order.driver.phone}</p>
                     {order.driver.vehicleType && (
                       <p className="text-xs text-gray-400">{VEHICLE_LABELS[order.driver.vehicleType] ?? order.driver.vehicleType}</p>
@@ -221,8 +221,8 @@ export default function CourseDetailModal({ order, onClose, onCancelled }: Props
                 <Row label="Taille colis" value={order.packageSize ?? '—'} />
                 <Row label="À collecter" value={order.amountToCollect != null ? `${order.amountToCollect.toFixed(2)}€` : '—'} />
                 <div className="flex items-center justify-between py-3 mt-1 border-t border-gray-200">
-                  <span className="font-bold text-[#0D1B2A]">Total course</span>
-                  <span className="font-bold text-xl text-[#0D1B2A]">{order.price != null ? order.price.toFixed(2) : '0.00'}€</span>
+                  <span className="font-bold text-[#0a2741]">Total course</span>
+                  <span className="font-bold text-xl text-[#0a2741]">{order.price != null ? order.price.toFixed(2) : '0.00'}€</span>
                 </div>
               </div>
             </div>

@@ -49,16 +49,16 @@ function DocumentCard({ doc }: { doc: DriverDocument }) {
       <div className="flex items-center justify-between px-4 py-3 bg-gray-50">
         <div className="flex items-center gap-2">
           <FileText size={14} className="text-gray-400" />
-          <span className="text-sm font-semibold text-[#0D1B2A]">{label}</span>
+          <span className="text-sm font-semibold text-[#0a2741]">{label}</span>
         </div>
         <div className="flex items-center gap-2">
           <a href={absUrl} target="_blank" rel="noopener noreferrer"
-            className="text-gray-400 hover:text-[#0D1B2A] transition" title="Ouvrir dans un nouvel onglet">
+            className="text-gray-400 hover:text-[#0a2741] transition" title="Ouvrir dans un nouvel onglet">
             <ExternalLink size={14} />
           </a>
           {image && (
             <button onClick={() => setExpanded(v => !v)}
-              className="text-xs font-semibold text-[#0D1B2A] hover:underline cursor-pointer">
+              className="text-xs font-semibold text-[#0a2741] hover:underline cursor-pointer">
               {expanded ? 'Masquer' : 'Voir'}
             </button>
           )}
@@ -80,14 +80,14 @@ function OrderRow({ order }: { order: AdminOrder }) {
   return (
     <div className="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-[#0D1B2A]">COURSE-{order.id}</p>
+        <p className="text-sm font-semibold text-[#0a2741]">COURSE-{order.id}</p>
         <p className="text-xs text-gray-400 truncate">
           {order.pickupAddress.split(',')[0]} → {order.deliveryAddress.split(',')[0]}
         </p>
         <p className="text-xs text-gray-300 mt-0.5">{new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
       </div>
       <div className="text-right shrink-0">
-        <p className="text-sm font-bold text-[#0D1B2A]">{order.price?.toFixed(2) ?? '0.00'}€</p>
+        <p className="text-sm font-bold text-[#0a2741]">{order.price?.toFixed(2) ?? '0.00'}€</p>
         <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${ORDER_STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-500'}`}>
           {order.status}
         </span>
@@ -206,19 +206,19 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
 
         {/* Header */}
         <div className="flex items-center gap-4 px-6 py-5 border-b border-gray-100 shrink-0">
-          <div className="w-12 h-12 rounded-full bg-[#0D1B2A] flex items-center justify-center text-[#CCFF00] font-bold text-lg shrink-0">
+          <div className="w-12 h-12 rounded-full bg-[#0a2741] flex items-center justify-center text-[#cdf900] font-bold text-lg shrink-0">
             {initials || '?'}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="font-bold text-[#0D1B2A] text-lg leading-tight">
+              <h2 className="font-bold text-[#0a2741] text-lg leading-tight">
                 {`${displayFirst} ${displayLast}`.trim() || '—'}
               </h2>
               {statusBadge()}
             </div>
             <p className="text-sm text-gray-400 truncate">{driver.email ?? '—'}</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-[#0D1B2A] transition cursor-pointer shrink-0">
+          <button onClick={onClose} className="text-gray-400 hover:text-[#0a2741] transition cursor-pointer shrink-0">
             <X size={22} />
           </button>
         </div>
@@ -234,7 +234,7 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 px-4 py-3 text-sm font-semibold border-b-2 transition cursor-pointer ${
                   active
-                    ? 'border-[#0D1B2A] text-[#0D1B2A]'
+                    ? 'border-[#0a2741] text-[#0a2741]'
                     : 'border-transparent text-gray-400 hover:text-gray-600'
                 }`}
               >
@@ -258,7 +258,7 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Coordonnées</p>
                   {!editing && (
                     <button onClick={() => setEditing(true)}
-                      className="flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-[#0D1B2A] transition cursor-pointer">
+                      className="flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-[#0a2741] transition cursor-pointer">
                       <Pencil size={12} /> Modifier
                     </button>
                   )}
@@ -268,37 +268,37 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
                     <label className="text-xs text-gray-400 mb-1 block">Prénom</label>
                     {editing
                       ? <input type="text" value={form.firstName} onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0D1B2A] bg-white" />
-                      : <p className="text-sm font-semibold text-[#0D1B2A]">{driver.firstName || '—'}</p>}
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0a2741] bg-white" />
+                      : <p className="text-sm font-semibold text-[#0a2741]">{driver.firstName || '—'}</p>}
                   </div>
                   <div>
                     <label className="text-xs text-gray-400 mb-1 block">Nom</label>
                     {editing
                       ? <input type="text" value={form.lastName} onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0D1B2A] bg-white" />
-                      : <p className="text-sm font-semibold text-[#0D1B2A]">{driver.lastName || '—'}</p>}
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0a2741] bg-white" />
+                      : <p className="text-sm font-semibold text-[#0a2741]">{driver.lastName || '—'}</p>}
                   </div>
                 </div>
                 <div>
                   <label className="text-xs text-gray-400 mb-1 block">Email</label>
                   {editing
                     ? <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0D1B2A] bg-white" />
-                    : <p className="text-sm font-semibold text-[#0D1B2A]">{driver.email || '—'}</p>}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0a2741] bg-white" />
+                    : <p className="text-sm font-semibold text-[#0a2741]">{driver.email || '—'}</p>}
                 </div>
                 <div>
                   <label className="text-xs text-gray-400 mb-1 block">Téléphone</label>
                   {editing
                     ? <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0D1B2A] bg-white" />
-                    : <p className="text-sm font-semibold text-[#0D1B2A]">{driver.phone || '—'}</p>}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0a2741] bg-white" />
+                    : <p className="text-sm font-semibold text-[#0a2741]">{driver.phone || '—'}</p>}
                 </div>
                 {!editing && (
                   <div>
                     <label className="text-xs text-gray-400 mb-1 block">Véhicule</label>
                     <div className="flex items-center gap-1.5">
                       <Truck size={14} className="text-gray-400" />
-                      <p className="text-sm font-semibold text-[#0D1B2A]">
+                      <p className="text-sm font-semibold text-[#0a2741]">
                         {(driver.vehicleType && VEHICLE_LABELS[driver.vehicleType]) ?? driver.vehicleType ?? '—'}
                       </p>
                     </div>
@@ -307,12 +307,12 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
                 {editing && (
                   <div className="flex gap-2 pt-1">
                     <button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending}
-                      className="flex items-center gap-1.5 bg-[#0D1B2A] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-50">
+                      className="flex items-center gap-1.5 bg-[#0a2741] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-50">
                       <Save size={14} />
                       {updateMutation.isPending ? 'Enregistrement…' : 'Enregistrer'}
                     </button>
                     <button onClick={cancelEdit}
-                      className="text-sm text-gray-400 hover:text-[#0D1B2A] px-4 py-2 rounded-xl border border-gray-200 transition cursor-pointer">
+                      className="text-sm text-gray-400 hover:text-[#0a2741] px-4 py-2 rounded-xl border border-gray-200 transition cursor-pointer">
                       Annuler
                     </button>
                   </div>
@@ -323,10 +323,10 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
               <div>
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Financier</p>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-[#0D1B2A] rounded-xl p-4">
+                  <div className="bg-[#0a2741] rounded-xl p-4">
                     <p className="text-xs text-gray-400 mb-1">Wallet (gains)</p>
                     <div className="flex items-center gap-1">
-                      <Euro size={14} className="text-[#CCFF00]" />
+                      <Euro size={14} className="text-[#cdf900]" />
                       <p className="font-bold text-white text-xl">{driver.walletBalance.toFixed(2)}</p>
                     </div>
                   </div>
@@ -346,14 +346,14 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
                     <p className="text-xs text-gray-400 mb-1">Courses livrées</p>
                     <div className="flex items-center gap-1">
                       <CheckCircle size={14} className="text-green-500" />
-                      <p className="font-bold text-[#0D1B2A] text-xl">{delivered}</p>
+                      <p className="font-bold text-[#0a2741] text-xl">{delivered}</p>
                     </div>
                   </div>
                   <div className="bg-gray-50 rounded-xl p-4">
                     <p className="text-xs text-gray-400 mb-1">Total courses</p>
                     <div className="flex items-center gap-1">
                       <XCircle size={14} className="text-gray-400" />
-                      <p className="font-bold text-[#0D1B2A] text-xl">{orders.length}</p>
+                      <p className="font-bold text-[#0a2741] text-xl">{orders.length}</p>
                     </div>
                   </div>
                 </div>
@@ -369,7 +369,7 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Sécurité</p>
                 <div className="border border-gray-100 rounded-xl overflow-hidden">
                   <button onClick={() => { setPwSection(v => !v); setPw(''); setPwSuccess(false) }}
-                    className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-[#0D1B2A] hover:bg-gray-50 transition cursor-pointer">
+                    className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-[#0a2741] hover:bg-gray-50 transition cursor-pointer">
                     <div className="flex items-center gap-2">
                       <KeyRound size={15} className="text-gray-400" />
                       Changer le mot de passe
@@ -382,13 +382,13 @@ export default function DriverDetailModal({ driver, onClose, onUpdated, onDelete
                       <div className="relative">
                         <input type={showPw ? 'text' : 'password'} placeholder="Nouveau mot de passe" value={pw}
                           onChange={e => setPw(e.target.value)}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0D1B2A] pr-10" />
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#0a2741] pr-10" />
                         <button onClick={() => setShowPw(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer">
                           {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
                         </button>
                       </div>
                       <button onClick={() => passwordMutation.mutate()} disabled={!pw || passwordMutation.isPending}
-                        className="w-full bg-[#0D1B2A] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-40">
+                        className="w-full bg-[#0a2741] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-40">
                         {passwordMutation.isPending ? 'Modification…' : 'Modifier le mot de passe'}
                       </button>
                     </div>

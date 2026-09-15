@@ -25,11 +25,11 @@ function OrderRow({ order }: { order: AdminOrder }) {
   return (
     <div className="flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-0">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-[#0D1B2A]">COURSE-{order.id}</p>
+        <p className="text-sm font-semibold text-[#0a2741]">COURSE-{order.id}</p>
         <p className="text-xs text-gray-400">{date} — {order.pickupAddress.split(',')[0]}</p>
       </div>
       <div className="text-right shrink-0">
-        <p className="text-sm font-bold text-[#0D1B2A]">{order.price?.toFixed(2) ?? '0.00'}€</p>
+        <p className="text-sm font-bold text-[#0a2741]">{order.price?.toFixed(2) ?? '0.00'}€</p>
         <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-500'}`}>
           {order.status}
         </span>
@@ -122,11 +122,11 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-[#0D1B2A] font-bold text-lg">
+            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-[#0a2741] font-bold text-lg">
               {initials || '?'}
             </div>
             <div>
-              <h2 className="font-bold text-[#0D1B2A] text-lg">
+              <h2 className="font-bold text-[#0a2741] text-lg">
                 {`${displayFirst} ${displayLast}`.trim() || '—'}
               </h2>
               <p className="text-sm text-gray-400">{editing ? form.email : (client.email ?? '—')}</p>
@@ -139,13 +139,13 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
             {!editing && (
               <button
                 onClick={() => setEditing(true)}
-                className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:text-[#0D1B2A] hover:border-gray-300 transition cursor-pointer"
+                className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:text-[#0a2741] hover:border-gray-300 transition cursor-pointer"
                 title="Modifier les infos"
               >
                 <Pencil size={14} />
               </button>
             )}
-            <button onClick={onClose} className="text-gray-400 hover:text-[#0D1B2A] transition cursor-pointer">
+            <button onClick={onClose} className="text-gray-400 hover:text-[#0a2741] transition cursor-pointer">
               <X size={20} />
             </button>
           </div>
@@ -162,10 +162,10 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
                   <input
                     type="text" value={form.firstName}
                     onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0D1B2A] outline-none focus:border-[#0D1B2A] transition bg-white"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0a2741] outline-none focus:border-[#0a2741] transition bg-white"
                   />
                 ) : (
-                  <p className="text-sm font-semibold text-[#0D1B2A]">{client.firstName || '—'}</p>
+                  <p className="text-sm font-semibold text-[#0a2741]">{client.firstName || '—'}</p>
                 )}
               </div>
               <div>
@@ -174,10 +174,10 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
                   <input
                     type="text" value={form.lastName}
                     onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0D1B2A] outline-none focus:border-[#0D1B2A] transition bg-white"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0a2741] outline-none focus:border-[#0a2741] transition bg-white"
                   />
                 ) : (
-                  <p className="text-sm font-semibold text-[#0D1B2A]">{client.lastName || '—'}</p>
+                  <p className="text-sm font-semibold text-[#0a2741]">{client.lastName || '—'}</p>
                 )}
               </div>
             </div>
@@ -187,10 +187,10 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
                 <input
                   type="email" value={form.email}
                   onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0D1B2A] outline-none focus:border-[#0D1B2A] transition bg-white"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0a2741] outline-none focus:border-[#0a2741] transition bg-white"
                 />
               ) : (
-                <p className="text-sm font-semibold text-[#0D1B2A]">{client.email || '—'}</p>
+                <p className="text-sm font-semibold text-[#0a2741]">{client.email || '—'}</p>
               )}
             </div>
             <div>
@@ -199,10 +199,10 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
                 <input
                   type="tel" value={form.phone}
                   onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0D1B2A] outline-none focus:border-[#0D1B2A] transition bg-white"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0a2741] outline-none focus:border-[#0a2741] transition bg-white"
                 />
               ) : (
-                <p className="text-sm font-semibold text-[#0D1B2A]">{client.phone || '—'}</p>
+                <p className="text-sm font-semibold text-[#0a2741]">{client.phone || '—'}</p>
               )}
             </div>
 
@@ -211,14 +211,14 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
                 <button
                   onClick={() => updateMutation.mutate()}
                   disabled={updateMutation.isPending}
-                  className="flex items-center gap-1.5 bg-[#0D1B2A] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-1.5 bg-[#0a2741] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-50"
                 >
                   <Save size={14} />
                   {updateMutation.isPending ? 'Enregistrement…' : 'Enregistrer'}
                 </button>
                 <button
                   onClick={cancelEdit}
-                  className="text-sm text-gray-400 hover:text-[#0D1B2A] px-4 py-2 rounded-xl border border-gray-200 hover:border-gray-300 transition cursor-pointer"
+                  className="text-sm text-gray-400 hover:text-[#0a2741] px-4 py-2 rounded-xl border border-gray-200 hover:border-gray-300 transition cursor-pointer"
                 >
                   Annuler
                 </button>
@@ -233,21 +233,21 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
                 <ShoppingBag size={13} className="text-green-500" />
                 <p className="text-xs text-gray-400">Commandes</p>
               </div>
-              <p className="font-bold text-[#0D1B2A] text-xl">{client.totalOrders}</p>
+              <p className="font-bold text-[#0a2741] text-xl">{client.totalOrders}</p>
             </div>
             <div className="bg-orange-50 rounded-xl p-4">
               <div className="flex items-center gap-1.5 mb-1">
                 <Euro size={13} className="text-orange-500" />
                 <p className="text-xs text-gray-400">Total dépensé</p>
               </div>
-              <p className="font-bold text-[#0D1B2A] text-xl">{client.totalSpent.toFixed(0)}€</p>
+              <p className="font-bold text-[#0a2741] text-xl">{client.totalSpent.toFixed(0)}€</p>
             </div>
             <div className="bg-blue-50 rounded-xl p-4">
               <div className="flex items-center gap-1.5 mb-1">
                 <TrendingUp size={13} className="text-blue-500" />
                 <p className="text-xs text-gray-400">Panier moy.</p>
               </div>
-              <p className="font-bold text-[#0D1B2A] text-xl">{avgBasket.toFixed(0)}€</p>
+              <p className="font-bold text-[#0a2741] text-xl">{avgBasket.toFixed(0)}€</p>
             </div>
           </div>
 
@@ -260,7 +260,7 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
           <div className="border border-gray-100 rounded-xl overflow-hidden">
             <button
               onClick={() => { setPwSection(v => !v); setPw(''); setPwSuccess(false) }}
-              className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-[#0D1B2A] hover:bg-gray-50 transition cursor-pointer"
+              className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-[#0a2741] hover:bg-gray-50 transition cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <KeyRound size={15} className="text-gray-400" />
@@ -282,7 +282,7 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
                     placeholder="Nouveau mot de passe"
                     value={pw}
                     onChange={e => setPw(e.target.value)}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0D1B2A] outline-none focus:border-[#0D1B2A] transition pr-10"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0a2741] outline-none focus:border-[#0a2741] transition pr-10"
                   />
                   <button
                     onClick={() => setShowPw(v => !v)}
@@ -294,7 +294,7 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
                 <button
                   onClick={() => passwordMutation.mutate()}
                   disabled={!pw || passwordMutation.isPending}
-                  className="w-full bg-[#0D1B2A] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-40"
+                  className="w-full bg-[#0a2741] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-40"
                 >
                   {passwordMutation.isPending ? 'Modification…' : 'Modifier le mot de passe'}
                 </button>

@@ -51,15 +51,15 @@ export default function AdminProfileModal({ onClose }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-[#0D1B2A] flex items-center justify-center text-[#CCFF00] font-bold text-lg">
+            <div className="w-12 h-12 rounded-full bg-[#0a2741] flex items-center justify-center text-[#cdf900] font-bold text-lg">
               {initials || 'A'}
             </div>
             <div>
-              <h2 className="font-bold text-[#0D1B2A] text-lg">Mon compte</h2>
+              <h2 className="font-bold text-[#0a2741] text-lg">Mon compte</h2>
               <p className="text-xs text-gray-400">{user?.role ?? 'ADMIN'}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-[#0D1B2A] transition cursor-pointer">
+          <button onClick={onClose} className="text-gray-400 hover:text-[#0a2741] transition cursor-pointer">
             <X size={20} />
           </button>
         </div>
@@ -77,7 +77,7 @@ export default function AdminProfileModal({ onClose }: Props) {
                 <input
                   type="text" value={form.firstName}
                   onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0D1B2A] outline-none focus:border-[#0D1B2A] transition bg-white"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0a2741] outline-none focus:border-[#0a2741] transition bg-white"
                 />
               </div>
               <div>
@@ -85,7 +85,7 @@ export default function AdminProfileModal({ onClose }: Props) {
                 <input
                   type="text" value={form.lastName}
                   onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0D1B2A] outline-none focus:border-[#0D1B2A] transition bg-white"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0a2741] outline-none focus:border-[#0a2741] transition bg-white"
                 />
               </div>
             </div>
@@ -94,13 +94,13 @@ export default function AdminProfileModal({ onClose }: Props) {
               <input
                 type="email" value={form.email}
                 onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0D1B2A] outline-none focus:border-[#0D1B2A] transition bg-white"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0a2741] outline-none focus:border-[#0a2741] transition bg-white"
               />
             </div>
             <button
               onClick={() => updateMutation.mutate()}
               disabled={updateMutation.isPending}
-              className="flex items-center gap-1.5 bg-[#0D1B2A] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 bg-[#0a2741] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-50"
             >
               <Save size={14} />
               {updateMutation.isPending ? 'Enregistrement…' : 'Enregistrer'}
@@ -111,7 +111,7 @@ export default function AdminProfileModal({ onClose }: Props) {
           <div className="border border-gray-100 rounded-xl overflow-hidden">
             <button
               onClick={() => { setPwSection(v => !v); setPw(''); }}
-              className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-[#0D1B2A] hover:bg-gray-50 transition cursor-pointer"
+              className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-[#0a2741] hover:bg-gray-50 transition cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <KeyRound size={15} className="text-gray-400" />
@@ -131,7 +131,7 @@ export default function AdminProfileModal({ onClose }: Props) {
                     placeholder="Nouveau mot de passe"
                     value={pw}
                     onChange={e => setPw(e.target.value)}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0D1B2A] outline-none focus:border-[#0D1B2A] transition pr-10"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[#0a2741] outline-none focus:border-[#0a2741] transition pr-10"
                   />
                   <button onClick={() => setShowPw(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer">
                     {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -140,7 +140,7 @@ export default function AdminProfileModal({ onClose }: Props) {
                 <button
                   onClick={() => passwordMutation.mutate()}
                   disabled={!pw || passwordMutation.isPending}
-                  className="w-full bg-[#0D1B2A] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-40"
+                  className="w-full bg-[#0a2741] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition cursor-pointer disabled:opacity-40"
                 >
                   {passwordMutation.isPending ? 'Modification…' : 'Modifier le mot de passe'}
                 </button>

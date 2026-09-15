@@ -74,7 +74,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-[#0D1B2A]">Tableau de bord</h2>
+        <h2 className="text-2xl font-bold text-[#0a2741]">Tableau de bord</h2>
         <span className="text-sm text-gray-500 border border-gray-200 rounded-xl px-4 py-2 bg-white shadow-sm capitalize">{today}</span>
       </div>
 
@@ -89,7 +89,7 @@ export default function DashboardPage() {
                 <Icon size={18} className={iconColor} />
               </div>
             </div>
-            <p className="text-3xl font-bold text-[#0D1B2A] mb-1">{value}</p>
+            <p className="text-3xl font-bold text-[#0a2741] mb-1">{value}</p>
             <div className="flex items-center gap-1 text-green-500 text-xs font-medium">
               <TrendingUp size={12} />
             </div>
@@ -100,8 +100,8 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-[#0D1B2A]">Dernières commandes</h3>
-            <Link to="/orders" className="text-sm text-gray-400 hover:text-[#0D1B2A] transition">Voir tout</Link>
+            <h3 className="font-bold text-[#0a2741]">Dernières commandes</h3>
+            <Link to="/orders" className="text-sm text-gray-400 hover:text-[#0a2741] transition">Voir tout</Link>
           </div>
           {ordersLoading ? (
             <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} />)}</div>
@@ -115,11 +115,11 @@ export default function DashboardPage() {
                     {order.client?.firstName?.[0] ?? '?'}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[#0D1B2A] text-sm">COURSE-{order.id}</p>
+                    <p className="font-semibold text-[#0a2741] text-sm">COURSE-{order.id}</p>
                     <p className="text-xs text-gray-400 truncate">{order.pickupAddress} → {order.deliveryAddress}</p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="font-bold text-[#0D1B2A] text-sm">{order.price != null ? order.price.toFixed(2) : '0.00'}€</p>
+                    <p className="font-bold text-[#0a2741] text-sm">{order.price != null ? order.price.toFixed(2) : '0.00'}€</p>
                     <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-500'}`}>
                       {STATUS_LABELS[order.status] ?? order.status}
                     </span>
@@ -132,8 +132,8 @@ export default function DashboardPage() {
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-[#0D1B2A]">Livreurs en attente</h3>
-            <Link to="/drivers" className="text-sm text-gray-400 hover:text-[#0D1B2A] transition">Gérer</Link>
+            <h3 className="font-bold text-[#0a2741]">Livreurs en attente</h3>
+            <Link to="/drivers" className="text-sm text-gray-400 hover:text-[#0a2741] transition">Gérer</Link>
           </div>
           {driversLoading ? (
             <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} />)}</div>
@@ -147,11 +147,11 @@ export default function DashboardPage() {
                     {d.firstName?.[0] ?? '?'}{d.lastName?.[0] ?? ''}
                   </div>
                   <div className="flex-1">
-                    <p className="font-bold text-[#0D1B2A] text-sm">{d.firstName} {d.lastName}</p>
+                    <p className="font-bold text-[#0a2741] text-sm">{d.firstName} {d.lastName}</p>
                     <p className="text-xs text-orange-500">Documents à vérifier</p>
                   </div>
                   <Link to="/drivers">
-                    <button className="w-7 h-7 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-[#0D1B2A] transition shadow-sm">
+                    <button className="w-7 h-7 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-[#0a2741] transition shadow-sm">
                       <ArrowUpRight size={14} />
                     </button>
                   </Link>

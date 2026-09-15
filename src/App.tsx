@@ -24,11 +24,11 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
             <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">⚠️</span>
             </div>
-            <h2 className="font-bold text-[#0D1B2A] text-lg mb-2">Une erreur est survenue</h2>
+            <h2 className="font-bold text-[#0a2741] text-lg mb-2">Une erreur est survenue</h2>
             <p className="text-sm text-gray-400 mb-6">Rechargez la page. Si le problème persiste, contactez le support.</p>
             <button
               onClick={() => window.location.reload()}
-              className="bg-[#0D1B2A] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:opacity-90 transition"
+              className="bg-[#0a2741] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:opacity-90 transition"
             >
               Recharger la page
             </button>

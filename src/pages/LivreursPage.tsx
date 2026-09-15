@@ -58,8 +58,13 @@ export default function LivreursPage() {
   const active  = drivers.filter(d => d.driverStatus === 'ACTIVE').length
   const pending = drivers.filter(d => d.driverStatus !== 'ACTIVE' && d.driverStatus !== 'SUSPENDED').length
 
-  const q = search.toLowerCase()
+  const q = search.trim().toLowerCase()
   const filtered = drivers.filter(d =>
+    !q ||
+    String(d.id).includes(q) ||
+    // La référence affichée dans le tableau est « COUR-42 » : sans cette ligne,
+    // copier-coller ce qu'on voit à l'écran ne renvoie aucun résultat.
+    `cour-${d.id}`.includes(q) ||
     `${d.firstName ?? ''} ${d.lastName ?? ''}`.toLowerCase().includes(q) ||
     (d.email ?? '').toLowerCase().includes(q) ||
     (d.phone ?? '').includes(q) ||
@@ -69,7 +74,7 @@ export default function LivreursPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#0D1B2A]">Gestion des Livreurs</h2>
+        <h2 className="text-2xl font-bold text-[#0a2741]">Gestion des Livreurs</h2>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-2 shadow-sm w-64">
             <Search size={15} className="text-gray-400 shrink-0" />
@@ -79,7 +84,7 @@ export default function LivreursPage() {
               className="outline-none text-sm text-gray-600 w-full bg-transparent"
             />
           </div>
-          <span className="text-sm font-medium text-[#0D1B2A] border border-gray-200 rounded-lg px-4 py-2 bg-white shadow-sm whitespace-nowrap">
+          <span className="text-sm font-medium text-[#0a2741] border border-gray-200 rounded-lg px-4 py-2 bg-white shadow-sm whitespace-nowrap">
             Total: {drivers.length} | En attente: {pending} | Actifs: {active}
           </span>
         </div>
@@ -107,7 +112,7 @@ export default function LivreursPage() {
                       {getInitials(d)}
                     </div>
                     <div>
-                      <p className="font-semibold text-[#0D1B2A] text-sm">{d.firstName} {d.lastName}</p>
+                      <p className="font-semibold text-[#0a2741] text-sm">{d.firstName} {d.lastName}</p>
                       <p className="text-xs text-gray-400">ID: COUR-{d.id}</p>
                     </div>
                   </div>
@@ -122,7 +127,7 @@ export default function LivreursPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="font-bold text-[#0D1B2A]">{d.walletBalance.toFixed(2)}€</span>
+                  <span className="font-bold text-[#0a2741]">{d.walletBalance.toFixed(2)}€</span>
                 </td>
                 <td className="px-6 py-4">
                   <StatusBadge status={d.driverStatus} />
@@ -154,7 +159,7 @@ export default function LivreursPage() {
                         )}
                       </>
                     ) : null}
-                    <button onClick={() => setSelected(d)} className="text-gray-400 hover:text-[#0D1B2A] transition ml-1 cursor-pointer">
+                    <button onClick={() => setSelected(d)} className="text-gray-400 hover:text-[#0a2741] transition ml-1 cursor-pointer">
                       <Eye size={18} />
                     </button>
                   </div>

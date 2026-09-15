@@ -38,15 +38,21 @@ export default function ClientsPage() {
     setConfirm(null)
   }
 
-  const filtered = clients.filter(c =>
-    `${c.firstName ?? ''} ${c.lastName ?? ''}`.toLowerCase().includes(search.toLowerCase()) ||
-    (c.email ?? '').toLowerCase().includes(search.toLowerCase())
-  )
+  const filtered = clients.filter(c => {
+    const q = search.trim().toLowerCase()
+    return !q ||
+      String(c.id).includes(q) ||
+      // La référence affichée dans le tableau est « CLIENT-42 » : sans cette ligne,
+      // copier-coller ce qu'on voit à l'écran ne renvoie aucun résultat.
+      `client-${c.id}`.includes(q) ||
+      `${c.firstName ?? ''} ${c.lastName ?? ''}`.toLowerCase().includes(q) ||
+      (c.email ?? '').toLowerCase().includes(q)
+  })
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#0D1B2A]">Gestion des Clients</h2>
+        <h2 className="text-2xl font-bold text-[#0a2741]">Gestion des Clients</h2>
         <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-2 shadow-sm w-72">
           <Search size={16} className="text-gray-400 shrink-0" />
           <input
@@ -75,11 +81,11 @@ export default function ClientsPage() {
               <tr key={c.id} className={i !== filtered.length - 1 ? 'border-b border-gray-50' : ''}>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-[#0D1B2A] font-bold text-sm shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-[#0a2741] font-bold text-sm shrink-0">
                       {c.firstName?.[0] ?? '?'}
                     </div>
                     <div>
-                      <p className="font-semibold text-[#0D1B2A] text-sm">{c.firstName ?? '—'} {c.lastName ?? ''}</p>
+                      <p className="font-semibold text-[#0a2741] text-sm">{c.firstName ?? '—'} {c.lastName ?? ''}</p>
                       <p className="text-xs text-gray-400">ID: CLIENT-{c.id}</p>
                     </div>
                   </div>
@@ -116,7 +122,7 @@ export default function ClientsPage() {
                         <Lock size={14} />
                       </button>
                     )}
-                    <button onClick={() => setSelected(c)} className="text-gray-400 hover:text-[#0D1B2A] transition cursor-pointer">
+                    <button onClick={() => setSelected(c)} className="text-gray-400 hover:text-[#0a2741] transition cursor-pointer">
                       <Eye size={18} />
                     </button>
                   </div>
