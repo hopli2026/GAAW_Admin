@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Lock, Eye, EyeOff, Mail } from 'lucide-react'
-import gaawLogo from '../assets/gaaw-logo.png'
+import gaawLogo from '../assets/gaaw-icon-on-dark.png'
 import { adminApi } from '../api/admin'
 import { useAuth } from '../context/AuthContext'
 
@@ -44,7 +44,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
         <div className="bg-[#0a2741] px-8 py-12 flex flex-col items-center gap-5">
-          <img src={gaawLogo} alt="GAAW" className="w-24 h-24 rounded-2xl object-cover" />
+          <img src={gaawLogo} alt="GAAW" className="w-20 h-20 object-contain" />
           <h1 className="text-white text-2xl font-bold tracking-tight">Administration GAAW</h1>
         </div>
 

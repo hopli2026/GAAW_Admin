@@ -100,7 +100,10 @@ export default function ClientDetailModal({ client, onClose, onUpdated, onDelete
     },
   })
 
-  const avgBasket = orders.length > 0 ? orders.reduce((s, o) => s + (o.price ?? 0), 0) / orders.length : 0
+  const deliveredOrders = orders.filter(o => o.status === 'DELIVERED')
+  const avgBasket = deliveredOrders.length > 0
+    ? deliveredOrders.reduce((s, o) => s + (o.price ?? 0), 0) / deliveredOrders.length
+    : 0
   const displayFirst = editing ? form.firstName : (client.firstName ?? '')
   const displayLast  = editing ? form.lastName  : (client.lastName  ?? '')
   const initials = `${displayFirst[0] ?? ''}${displayLast[0] ?? ''}`.toUpperCase()
